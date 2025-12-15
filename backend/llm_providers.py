@@ -86,7 +86,7 @@ class MistralProvider(LLMProvider):
 class GeminiProvider(LLMProvider):
     """Google Gemini provider"""
 
-    def __init__(self, api_key: str = None, model: str = "gemini-1.5-flash"):
+    def __init__(self, api_key: str = None, model: str = "gemini-1.5-pro"):
         import google.generativeai as genai
 
         api_key = api_key or os.getenv("GEMINI_API_KEY")
