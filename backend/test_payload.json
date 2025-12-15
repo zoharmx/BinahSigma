@@ -1,0 +1,7 @@
+{
+  "context": "Startup tecnologica considerando cambiar de modelo de negocio de suscripcion mensual a anual obligatoria para mejorar cash flow",
+  "decision_question": "Debemos forzar a todos los clientes a suscripcion anual?",
+  "stakeholders": ["clientes actuales", "equipo ventas", "inversores", "finanzas"],
+  "constraints": ["churn rate actual 15%", "runway de 8 meses", "competencia con planes mensuales"],
+  "time_horizon": "6 meses"
+}

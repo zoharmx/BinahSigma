@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: binah-sigma-api
+    env: python
+    region: oregon
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: cd backend && uvicorn main_v2:app --host 0.0.0.0 --port $PORT --workers 2
+    healthCheckPath: /health
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: INIT_DEMO_KEYS
+        value: false
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: MISTRAL_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: DEEPSEEK_API_KEY
+        sync: false
+    autoDeploy: true

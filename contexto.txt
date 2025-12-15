@@ -1,0 +1,1158 @@
+Binah-σ Mvp – Backend & Frontend
+· other
+# BINAH-Σ MVP
+
+
+## 1. BACKEND – FastAPI Endpoint
+
+
+### stack
+- Python 3.10+
+- FastAPI
+- Uvicorn
+- OpenAI SDK (o proveedor LLM equivalente)
+
+
+### estructura mínima
+```
+binah_sigma_api/
+├─ main.py
+├─ schemas.py
+├─ engine.py
+├─ requirements.txt
+```
+
+
+---
+
+
+### requirements.txt
+```
+fastapi
+uvicorn
+pydantic
+python-dotenv
+openai
+```
+
+
+---
+
+
+### schemas.py
+```python
+from pydantic import BaseModel
+from typing import List
+
+
+class BinahSigmaRequest(BaseModel):
+    context: str
+    decision_question: str
+    stakeholders: List[str]
+    constraints: List[str]
+    time_horizon: str
+
+
+class BinahSigmaResponse(BaseModel):
+    binah_sigma_index: float
+    binah_sigma_confidence: float
+    decision_coherence: str
+    ethical_alignment: str
+    systemic_risk: str
+    key_tensions: List[str]
+    unintended_consequences: List[str]
+    binah_recommendation: str
+    explanation_summary: str
+    analysis_version: str
+```
+
+
+---
+
+
+### engine.py
+```python
+from openai import OpenAI
+import os
+
+
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+
+BINAH_SIGMA_SYSTEM = """
+You are Binah-Σ, a deep synthesis reasoning engine.
+Your role is NOT to chat, speculate, persuade, or generate generic advice.
+
+
+STRICT RULES:
+
+Excelente elección.
+Lo que estás pidiendo ahora es pasar de “backend correcto” a “backend auditable y profesional”. Voy por partes y con total claridad.
+(Nota: intenté aplicar los cambios directamente en el canvas, pero falló el match automático del patrón. Te dejo el código limpio y exacto para que lo pegues sin ambigüedad).
+
+1️⃣ Validación estricta con Pydantic (anti-respuestas rotas)
+Objetivo real
+
+Que NINGÚN output del modelo llegue al cliente si:
+
+falta un campo
+
+un tipo es incorrecto
+
+el JSON es semánticamente inválido
+
+El LLM no decide si el análisis es válido.
+Lo decide el schema.
+
+Implementación correcta en engine.py
+Imports (clave)
+import json
+import os
+import logging
+from pydantic import ValidationError
+from openai import AsyncOpenAI
+from schemas import BinahSigmaResponse
+
+Logger estructurado (mínimo pero serio)
+logger = logging.getLogger("binah_sigma")
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(message)s"
+)
+
+Engine endurecido + validación estricta
+client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+async def run_binah_sigma(data: dict) -> dict:
+    prompt = BINAH_SIGMA_PROMPT.format(**data)
+
+    try:
+        response = await client.chat.completions.create(
+            model="gpt-4-turbo",
+            messages=[
+                {"role": "system", "content": BINAH_SIGMA_SYSTEM},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.2,
+            response_format={"type": "json_object"},
+            timeout=30
+        )
+
+        raw_content = response.choices[0].message.content
+        parsed = json.loads(raw_content)
+
+        # 🔐 VALIDACIÓN CRÍTICA
+        validated = BinahSigmaResponse(**parsed)
+
+        logger.info(
+            "BINAH-Σ OK | index=%.2f | confidence=%.2f",
+            validated.binah_sigma_index,
+            validated.binah_sigma_confidence
+        )
+
+        return validated.dict()
+
+    except ValidationError as ve:
+        logger.error(
+            "BINAH-Σ SCHEMA VIOLATION",
+            extra={"errors": ve.errors(), "raw": parsed}
+        )
+        raise
+
+    except Exception as e:
+        logger.exception("BINAH-Σ ENGINE FAILURE")
+        raise
+
+
+
+
+
+engine.py (Versión Segura)
+Python
+
+import json
+import os
+from openai import AsyncOpenAI  # Usamos cliente asíncrono
+
+# Inicialización asíncrona
+client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+BINAH_SIGMA_SYSTEM = """
+You are Binah-Σ, a deep synthesis reasoning engine.
+Your role is NOT to chat, speculate, persuade, or generate generic advice.
+... (Resto de tu prompt igual) ...
+OUTPUT REQUIREMENTS:
+- You must output ONLY valid JSON.
+"""
+
+BINAH_SIGMA_PROMPT = """
+Context: {context}
+Decision Question: {decision_question}
+Stakeholders: {stakeholders}
+Constraints: {constraints}
+Time Horizon: {time_horizon}
+... (Resto de tu prompt igual) ...
+"""
+
+async def run_binah_sigma(data: dict) -> dict:
+    prompt = BINAH_SIGMA_PROMPT.format(**data)
+
+    try:
+        response = await client.chat.completions.create(
+            model="gpt-4-turbo",  # GPT-4 Turbo soporta JSON mode nativo mejor
+            messages=[
+                {"role": "system", "content": BINAH_SIGMA_SYSTEM},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.2,
+            response_format={"type": "json_object"}  # ⚠️ FUERZA JSON SEGURO
+        )
+        
+        content = response.choices[0].message.content
+        
+        # Parseo seguro. Si falla, no rompe el servidor, lanza error controlado.
+        return json.loads(content) 
+        
+    except Exception as e:
+        # Manejo de error elegante para devolver un JSON de error
+        return {
+            "binah_sigma_index": 0.0,
+            "decision_coherence": "Error",
+            "explanation_summary": f"System Failure: {str(e)}",
+            "binah_sigma_confidence": 0.0,
+            "key_tensions": [],
+            "unintended_consequences": [],
+            "ethical_alignment": "N/A",
+            "systemic_risk": "N/A",
+            "binah_recommendation": "Retry analysis.",
+            "analysis_version": "v1.0"
+        }
+
+
+
+
+
+
+
+
+
+# BINAH-Σ MVP
+
+
+
+## 1. BACKEND – FastAPI Endpoint
+
+
+
+### stack
+
+- Python 3.10+
+
+- FastAPI
+
+- Uvicorn
+
+- OpenAI SDK (o proveedor LLM equivalente)
+
+
+
+### estructura mínima
+
+```
+
+binah_sigma_api/
+
+├─ main.py
+
+├─ schemas.py
+
+├─ engine.py
+
+├─ requirements.txt
+
+```
+
+
+
+---
+
+
+
+### requirements.txt
+
+```
+
+fastapi
+
+uvicorn
+
+pydantic
+
+python-dotenv
+
+openai
+
+```
+
+
+
+---
+
+
+
+### schemas.py
+
+```python
+
+from pydantic import BaseModel
+
+from typing import List
+
+
+
+class BinahSigmaRequest(BaseModel):
+
+context: str
+
+decision_question: str
+
+stakeholders: List[str]
+
+constraints: List[str]
+
+time_horizon: str
+
+
+
+class BinahSigmaResponse(BaseModel):
+
+binah_sigma_index: float
+
+binah_sigma_confidence: float
+
+decision_coherence: str
+
+ethical_alignment: str
+
+systemic_risk: str
+
+key_tensions: List[str]
+
+unintended_consequences: List[str]
+
+binah_recommendation: str
+
+explanation_summary: str
+
+analysis_version: str
+
+```
+
+
+
+---
+
+
+
+### engine.py
+
+```python
+
+from openai import OpenAI
+
+import os
+
+
+
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+
+
+BINAH_SIGMA_SYSTEM = """
+
+You are Binah-Σ, a deep synthesis reasoning engine.
+
+Your role is NOT to chat, speculate, persuade, or generate generic advice.
+
+
+
+
+
+1️⃣ Validación estricta con Pydantic (anti-respuestas rotas)
+
+Objetivo real
+
+Que NINGÚN output del modelo llegue al cliente si:
+
+
+
+falta un campo
+
+un tipo es incorrecto
+
+el JSON es semánticamente inválido
+
+El LLM no decide si el análisis es válido.
+
+
+
+Lo decide el schema.
+
+Implementación correcta en engine.py
+
+Imports (clave)
+
+
+
+import jsonimport osimport loggingfrom pydantic import ValidationErrorfrom openai import AsyncOpenAIfrom schemas import BinahSigmaResponse
+
+Logger estructurado (mínimo pero serio)
+
+
+
+logger = logging.getLogger("binah_sigma")
+
+logging.basicConfig(
+
+level=logging.INFO,
+
+format="%(asctime)s | %(levelname)s | %(message)s"
+
+)
+
+Engine endurecido + validación estricta
+
+
+
+client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))async def run_binah_sigma(data: dict) -> dict:
+
+prompt = BINAH_SIGMA_PROMPT.format(**data)
+
+
+
+try:
+
+response = await client.chat.completions.create(
+
+model="gpt-4-turbo",
+
+messages=[
+
+{"role": "system", "content": BINAH_SIGMA_SYSTEM},
+
+{"role": "user", "content": prompt}
+
+],
+
+temperature=0.2,
+
+response_format={"type": "json_object"},
+
+timeout=30
+
+)
+
+
+
+raw_content = response.choices[0].message.content
+
+parsed = json.loads(raw_content)
+
+
+
+# 🔐 VALIDACIÓN CRÍTICA
+
+validated = BinahSigmaResponse(**parsed)
+
+
+
+logger.info(
+
+"BINAH-Σ OK | index=%.2f | confidence=%.2f",
+
+validated.binah_sigma_index,
+
+validated.binah_sigma_confidence
+
+)
+
+
+
+return validated.dict()
+
+
+
+except ValidationError as ve:
+
+logger.error(
+
+"BINAH-Σ SCHEMA VIOLATION",
+
+extra={"errors": ve.errors(), "raw": parsed}
+
+)
+
+raise
+
+
+
+except Exception as e:
+
+logger.exception("BINAH-Σ ENGINE FAILURE")
+
+raise
+
+
+
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware # Necesario para que el HTML funcione
+from schemas import BinahSigmaRequest, BinahSigmaResponse
+from engine import run_binah_sigma
+
+app = FastAPI(title="Binah-Σ Decision Engine")
+
+# Configurar CORS para permitir que tu index.html local llame a la API
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], 
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+@app.post("/binah-sigma/analyze", response_model=BinahSigmaResponse)
+async def analyze_decision(payload: BinahSigmaRequest): # Nota el 'async'
+    result = await run_binah_sigma(payload.dict()) # Nota el 'await'
+    return result
+
+
+
+
+
+
+
+Binah-Σ
+
+Infraestructura Cognitiva para la Evaluación Ética y Sistémica de Decisiones
+
+1. Resumen Ejecutivo
+
+Binah-Σ es una infraestructura cognitiva diseñada para evaluar decisiones complejas bajo criterios de coherencia sistémica, alineación ética y riesgo estructural. A diferencia de los sistemas de IA generativa tradicionales —centrados en producir texto— Binah-Σ opera como un motor de evaluación, entregando salidas estructuradas, medibles y auditables.
+
+El sistema nace de una premisa simple pero poderosa:
+
+El verdadero valor de la inteligencia artificial en contextos críticos no es generar respuestas, sino evaluar la calidad de las decisiones.
+
+Binah-Σ traduce esta premisa en un producto tecnológico escalable, orientado a empresas, gobiernos, instituciones financieras, organizaciones multilaterales y sectores regulados.
+
+2. El Problema
+
+Las organizaciones modernas toman decisiones cada vez más complejas:
+
+Impactan múltiples stakeholders
+
+Tienen consecuencias éticas y reputacionales
+
+Generan efectos sistémicos no lineales
+
+Operan bajo incertidumbre y presión temporal
+
+Las herramientas actuales presentan limitaciones claras:
+
+Dashboards: miden resultados, no calidad decisional
+
+Consultoría humana: costosa, lenta y no escalable
+
+Chatbots / LLMs: no auditables, no confiables para contextos críticos
+
+Existe un vacío entre pensar y decidir bien.
+
+3. La Solución: Binah-Σ
+
+Binah-Σ es un motor de evaluación cognitiva que:
+
+Descompone decisiones complejas (principio Binah)
+
+Sintetiza coherencia estructural (principio Σ)
+
+Evalúa riesgos éticos y sistémicos
+
+Produce salidas estrictamente estructuradas
+
+Genera métricas longitudinales de calidad decisional
+
+Output típico
+
+El sistema no entrega texto libre, sino un informe estructurado, por ejemplo:
+
+Índice Binah-Σ (0–1)
+
+Nivel de confianza
+
+Tensiones clave
+
+Riesgos sistémicos
+
+Consecuencias no intencionadas
+
+Recomendación sintética
+
+Esto permite comparar decisiones, auditar procesos y mejorar con el tiempo.
+
+4. Diferenciación Clave
+
+No es un chatbot
+
+IA Generativa
+
+Binah-Σ
+
+Produce texto
+
+Evalúa decisiones
+
+No auditable
+
+Auditabilidad nativa
+
+Prompt-dependiente
+
+Sistema-dependiente
+
+Resultados efímeros
+
+Métricas acumulativas
+
+Killer Feature Real
+
+La ventaja competitiva no es el modelo subyacente, sino la infraestructura de control, validación y métricas que rodea al razonamiento.
+
+5. Arquitectura Técnica (Resumen)
+
+Binah-Σ se construye como un servicio desacoplado y escalable:
+
+API Gateway (FastAPI, async)
+
+Motor de razonamiento estructurado
+
+Validación estricta por esquema
+
+Logging cognitivo (no textual)
+
+Métricas agregadas
+
+Persistencia opcional
+
+Esto permite:
+
+Alta concurrencia
+
+Trazabilidad
+
+Integración con sistemas existentes
+
+Cumplimiento regulatorio
+
+6. Auditabilidad y Métricas (Ventaja Estratégica)
+
+Cada análisis genera señales estructurales:
+
+Índices numéricos
+
+Categorías de riesgo
+
+Latencia
+
+Dominio decisional
+
+Estas señales permiten:
+
+Auditoría retrospectiva
+
+Benchmarking interno
+
+Detección temprana de fallos decisionales
+
+Gobierno corporativo basado en datos
+
+Binah-Σ no registra razonamientos internos, sino resultados cognitivos observables.
+
+7. Casos de Uso Iniciales
+
+Evaluación de políticas públicas
+
+Decisiones ESG y compliance
+
+Fusiones y adquisiciones
+
+Estrategia corporativa
+
+Inversiones de alto impacto
+
+Análisis de riesgos regulatorios
+
+8. Modelo de Negocio (Preliminar)
+
+SaaS por volumen de análisis
+
+Licencias enterprise
+
+API metered usage
+
+Dashboards de auditoría premium
+
+White-label para instituciones
+
+El valor crece con el uso, no solo con el acceso.
+
+9. Ventaja Defensiva
+
+Vendor-agnostic respecto al modelo LLM
+
+Know-how en diseño cognitivo
+
+Datos agregados de calidad decisional
+
+Barrera conceptual y técnica
+
+El sistema mejora no porque “aprenda”, sino porque mide.
+
+10. Visión
+
+Binah-Σ aspira a convertirse en:
+
+El estándar de referencia para evaluar la calidad de las decisiones humanas y organizacionales en sistemas complejos.
+
+No reemplaza al decisor.
+
+Eleva el nivel de la decisión.
+
+11. Estado Actual
+
+MVP funcional
+
+Arquitectura validada
+
+Endpoint operativo
+
+Casos de estudio en desarrollo
+
+Listo para:
+
+Pilotos
+
+Alianzas estratégicas
+
+Inversión semilla / pre-seed
+
+Binah-Σ
+
+Infraestructura cognitiva.
+No opinión.
+No discurso.
+Decisión medible.
+
+
+
+
+
+
+
+Binah-Σ desde cero (producto real)
+
+Voy a darte la arquitectura definitiva, sin adornos.
+
+1️⃣ Visión general
+┌───────────────┐
+│   Frontend    │
+│ (UI / API)    │
+└──────┬────────┘
+       │
+       ▼
+┌──────────────────────┐
+│  API Gateway (FastAPI)│
+│  - Auth              │
+│  - Rate limit        │
+│  - Validation        │
+└──────┬───────────────┘
+       │
+       ▼
+┌──────────────────────┐
+│ Binah-Σ Engine       │
+│ - Prompt Orchestration│
+│ - LLM Call           │
+│ - JSON enforcement   │
+└──────┬───────────────┘
+       │
+       ▼
+┌──────────────────────┐
+│ Validation Layer     │
+│ - Pydantic schemas   │
+│ - Consistency checks │
+└──────┬───────────────┘
+       │
+       ├──────────────┐
+       ▼              ▼
+┌──────────────┐  ┌────────────────┐
+│ Logging      │  │ Metrics Engine │
+│ (Structured) │  │ (KPIs)         │
+└──────────────┘  └────────────────┘
+       │
+       ▼
+┌──────────────────────┐
+│ Storage (Optional)   │
+│ - Decisions          │
+│ - Aggregates         │Binah-Σ desde cero (producto real)
+
+Voy a darte la arquitectura definitiva, sin adornos.
+
+1️⃣ Visión general
+┌───────────────┐
+│   Frontend    │
+│ (UI / API)    │
+└──────┬────────┘
+       │
+       ▼
+┌──────────────────────┐
+│  API Gateway (FastAPI)│
+│  - Auth              │
+│  - Rate limit        │
+│  - Validation        │
+└──────┬───────────────┘
+       │
+       ▼
+┌──────────────────────┐
+│ Binah-Σ Engine       │
+│ - Prompt Orchestration│
+│ - LLM Call           │
+│ - JSON enforcement   │
+└──────┬───────────────┘
+       │
+       ▼
+┌──────────────────────┐
+│ Validation Layer     │
+│ - Pydantic schemas   │
+│ - Consistency checks │
+└──────┬───────────────┘
+       │
+       ├──────────────┐
+       ▼              ▼
+┌──────────────┐  ┌────────────────┐
+│ Logging      │  │ Metrics Engine │
+│ (Structured) │  │ (KPIs)         │
+└──────────────┘  └────────────────┘
+       │
+       ▼
+┌──────────────────────┐
+│ Storage (Optional)   │
+│ - Decisions          │
+│ - Aggregates         │
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Binah-Σ — Cognitive Decision Infrastructure
+
+## README.md
+
+
+
+
+
+
+
+
+
+
+### Overview
+
+Binah-Σ is a **cognitive decision evaluation engine** designed to analyze complex decisions through structured, ethical, and systemic lenses. Unlike generative chat systems, Binah-Σ produces **auditable, structured outputs** suitable for enterprise, policy, ESG, and compliance use cases.
+
+This repository contains the **complete MVP implementation**: backend API, reasoning engine, schemas, and a demo frontend.
+
+---
+
+## Key Features
+
+* Structured decision evaluation (not text generation)
+* Strict JSON output enforced by schema
+* Async, non-blocking API
+* Audit-ready logging and metrics hooks
+* LLM vendor-agnostic architecture
+* Frontend demo for immediate validation
+
+---
+
+## Tech Stack
+
+* Python 3.10+
+* FastAPI (async)
+* Pydantic
+* OpenAI SDK (pluggable)
+* HTML + Vanilla JS (demo frontend)
+
+---
+
+## Project Structure
+
+```
+binah-sigma/
+├── backend/
+│   ├── main.py
+│   ├── engine.py
+│   ├── schemas.py
+│   ├── requirements.txt
+│   └── .env.example
+│
+├── frontend/
+│   └── index.html
+│
+└── README.md
+```
+
+---
+
+## Backend Setup
+
+### 1. Environment Variables
+
+Create a `.env` file:
+
+```
+OPENAI_API_KEY=your_api_key_here
+```
+
+### 2. Install Dependencies
+
+```
+pip install -r requirements.txt
+```
+
+### 3. Run API
+
+```
+uvicorn main:app --reload
+```
+
+API will be available at:
+
+```
+http://localhost:8000
+```
+
+Swagger UI:
+
+```
+http://localhost:8000/docs
+```
+
+---
+
+## Backend Code
+
+### requirements.txt
+
+```
+fastapi
+uvicorn
+pydantic
+python-dotenv
+openai
+```
+
+---
+
+### schemas.py
+
+```python
+from pydantic import BaseModel
+from typing import List
+
+class BinahSigmaRequest(BaseModel):
+    context: str
+    decision_question: str
+    stakeholders: List[str]
+    constraints: List[str]
+    time_horizon: str
+
+class BinahSigmaResponse(BaseModel):
+    binah_sigma_index: float
+    binah_sigma_confidence: float
+    decision_coherence: str
+    ethical_alignment: str
+    systemic_risk: str
+    key_tensions: List[str]
+    unintended_consequences: List[str]
+    binah_recommendation: str
+    explanation_summary: str
+    analysis_version: str
+```
+
+---
+
+### engine.py
+
+```python
+import os
+import json
+from openai import AsyncOpenAI
+from schemas import BinahSigmaResponse
+
+client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+BINAH_SIGMA_SYSTEM = """
+You are Binah-Σ, a deep synthesis reasoning engine.
+Your role is NOT to chat, speculate, persuade, or generate generic advice.
+
+STRICT RULES:
+- Decompose complexity (Binah) and synthesize coherence (Σ).
+- Never expose chain-of-thought.
+- Output ONLY valid JSON following the Binah-Σ schema.
+"""
+
+BINAH_SIGMA_PROMPT = """
+Context: {context}
+Decision Question: {decision_question}
+Stakeholders: {stakeholders}
+Constraints: {constraints}
+Time Horizon: {time_horizon}
+
+Apply the Binah-Σ methodology strictly.
+Return ONLY valid JSON.
+"""
+
+async def run_binah_sigma(data: dict) -> dict:
+    prompt = BINAH_SIGMA_PROMPT.format(**data)
+
+    response = await client.chat.completions.create(
+        model="gpt-4.1",
+        messages=[
+            {"role": "system", "content": BINAH_SIGMA_SYSTEM},
+            {"role": "user", "content": prompt}
+        ],
+        temperature=0.2,
+        response_format={"type": "json_object"}
+    )
+
+    content = response.choices[0].message.content
+    parsed = json.loads(content)
+
+    validated = BinahSigmaResponse(**parsed)
+    return validated.dict()
+```
+
+---
+
+### main.py
+
+```python
+from fastapi import FastAPI, HTTPException
+from pydantic import ValidationError
+from schemas import BinahSigmaRequest, BinahSigmaResponse
+from engine import run_binah_sigma
+
+app = FastAPI(title="Binah-Σ Decision Engine")
+
+@app.post(
+    "/binah-sigma/analyze",
+    response_model=BinahSigmaResponse,
+    summary="Run structured Binah-Σ decision analysis",
+)
+async def analyze_decision(payload: BinahSigmaRequest):
+    try:
+        result = await run_binah_sigma(payload.dict())
+        return result
+    except ValidationError as e:
+        raise HTTPException(
+            status_code=502,
+            detail="Upstream reasoning engine produced invalid structured output"
+        )
+    except Exception:
+        raise HTTPException(
+            status_code=500,
+            detail="Internal reasoning engine error"
+        )
+```
+
+---
+
+## Frontend Demo
+
+### frontend/index.html
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Binah-Σ Demo</title>
+  <style>
+    body { font-family: monospace; padding: 40px; }
+    textarea, input { width: 100%; margin-bottom: 12px; }
+    button { padding: 10px; }
+    pre { background: #111; color: #0f0; padding: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Binah-Σ Decision Analysis</h1>
+
+  <input id="context" placeholder="Context" />
+  <textarea id="question" placeholder="Decision question"></textarea>
+  <textarea id="stakeholders" placeholder="Stakeholders (comma separated)"></textarea>
+  <textarea id="constraints" placeholder="Constraints (comma separated)"></textarea>
+  <input id="time" placeholder="Time horizon" />
+
+  <button onclick="runAnalysis()">Run Binah-Σ</button>
+
+  <pre id="output"></pre>
+
+<script>
+async function runAnalysis() {
+  const payload = {
+    context: document.getElementById('context').value,
+    decision_question: document.getElementById('question').value,
+    stakeholders: document.getElementById('stakeholders').value.split(','),
+    constraints: document.getElementById('constraints').value.split(','),
+    time_horizon: document.getElementById('time').value
+  };
+
+  const res = await fetch('http://localhost:8000/binah-sigma/analyze', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+
+  const data = await res.json();
+  document.getElementById('output').textContent = JSON.stringify(data, null, 2);
+}
+</script>
+</body>
+</html>
+```
+
+---
+
+## License
+
+Proprietary / Confidential — All rights reserved.
+
+---
+
+**Binah-Σ**
+
+Cognitive infrastructure for measurable decisions.
+Not chat. Not opinion. Structured judgment.
