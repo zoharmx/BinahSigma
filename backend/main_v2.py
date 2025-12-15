@@ -33,7 +33,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "https://binahsigma.onrender.com",  # Production frontend
-        "binah-sigma.vercel.app",           # Production frontend
+        "https://binah-sigma.vercel.app",   # Production frontend
         "http://localhost:3000",            # Local development
         "http://localhost:8000",            # Local development
         "http://127.0.0.1:3000",            # Local development
