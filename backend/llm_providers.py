@@ -116,14 +116,44 @@ class GeminiProvider(LLMProvider):
                 prompt_parts.append(f"USER:\n{content}\n")
 
         full_prompt = "\n".join(prompt_parts)
+        full_prompt += "\n\nIMPORTANT: You MUST respond with ONLY valid JSON. No markdown, no code blocks, just pure JSON."
 
         def _call():
-            return self.client.generate_content(full_prompt)
+            response = self.client.generate_content(full_prompt)
+
+            # Check for blocked content
+            if not response.candidates:
+                raise ValueError("Gemini blocked the response due to safety filters")
+
+            # Check if response has text
+            if not hasattr(response, 'text') or not response.text:
+                raise ValueError("Gemini returned empty response")
+
+            return response
 
         response = await loop.run_in_executor(None, _call)
         self.call_count += 1
 
-        return response.text
+        # Clean the response text (remove markdown if present)
+        text = response.text.strip()
+
+        # Remove markdown code blocks if present
+        if text.startswith('```json'):
+            text = text[7:]  # Remove ```json
+        if text.startswith('```'):
+            text = text[3:]  # Remove ```
+        if text.endswith('```'):
+            text = text[:-3]  # Remove trailing ```
+
+        text = text.strip()
+
+        # Validate it's valid JSON
+        try:
+            json.loads(text)
+        except json.JSONDecodeError as e:
+            raise ValueError(f"Gemini returned invalid JSON: {e}. Response: {text[:200]}")
+
+        return text
 
 
 class DeepSeekProvider(LLMProvider):
