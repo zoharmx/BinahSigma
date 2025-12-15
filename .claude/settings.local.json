@@ -14,7 +14,8 @@
       "Bash(python pre_deploy_check.py:*)",
       "Bash(copy:*)",
       "Bash(python:*)",
-      "Bash(docker build:*)"
+      "Bash(docker build:*)",
+      "Bash(git add:*)"
     ]
   }
 }
