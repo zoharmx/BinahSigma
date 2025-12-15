@@ -13,12 +13,12 @@
       "dest": "/frontend/index.html"
     },
     {
-      "src": "/v1",
-      "dest": "/frontend/index_v1.html"
+      "src": "/app",
+      "dest": "/frontend/app.html"
     },
     {
-      "src": "/v2",
-      "dest": "/frontend/index.html"
+      "src": "/v1",
+      "dest": "/frontend/index_v1.html"
     },
     {
       "src": "/(.*)",
