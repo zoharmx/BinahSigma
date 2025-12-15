@@ -13,7 +13,13 @@ app = FastAPI(
 # Configurar CORS para permitir llamadas desde frontend local
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # En producción, especificar dominios exactos
+    allow_origins=[
+        "https://binahsigma.onrender.com",  # Production frontend
+        "http://localhost:3000",            # Local development
+        "http://localhost:8000",            # Local development
+        "http://127.0.0.1:3000",            # Local development
+        "http://127.0.0.1:8000",            # Local development
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

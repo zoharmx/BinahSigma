@@ -228,7 +228,11 @@
   </div>
 
   <script>
-    const API_URL = 'http://localhost:8000/binah-sigma/analyze';
+    // Production URL
+    const API_URL = 'https://binahsigma.onrender.com/binah-sigma/analyze';
+
+    // Development URL (uncomment for local testing)
+    // const API_URL = 'http://localhost:8000/binah-sigma/analyze';
 
     document.getElementById('analysisForm').addEventListener('submit', async (e) => {
       e.preventDefault();
