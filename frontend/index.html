@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Binah-Σ Decision Analysis</title>
+  <title>Binah-Σ v2.0 - Decision Analysis Engine</title>
   <style>
     * {
       margin: 0;
@@ -15,25 +15,97 @@
       font-family: 'Courier New', monospace;
       background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
       color: #00ff88;
-      padding: 40px;
+      padding: 20px;
       min-height: 100vh;
     }
 
     .container {
-      max-width: 900px;
+      max-width: 1200px;
       margin: 0 auto;
     }
 
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
     h1 {
-      font-size: 2.5rem;
+      font-size: 3rem;
       margin-bottom: 10px;
-      text-shadow: 0 0 10px #00ff88;
+      text-shadow: 0 0 20px #00ff88;
+    }
+
+    .version {
+      color: #00ffff;
+      font-size: 0.9rem;
     }
 
     .subtitle {
       color: #888;
-      margin-bottom: 40px;
+      margin-bottom: 20px;
       font-size: 0.9rem;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+      border-bottom: 2px solid #00ff88;
+      padding-bottom: 10px;
+    }
+
+    .tab {
+      padding: 10px 20px;
+      background: #0f0f0f;
+      border: 1px solid #00ff88;
+      color: #00ff88;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .tab:hover, .tab.active {
+      background: #00ff88;
+      color: #0a0a0a;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .examples-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .example-card {
+      background: #0f0f0f;
+      border: 1px solid #00ff88;
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .example-card:hover {
+      background: #1a1a1a;
+      border-color: #00ffff;
+      transform: translateY(-5px);
+    }
+
+    .example-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #00ffff;
+    }
+
+    .example-desc {
+      font-size: 0.85rem;
+      color: #888;
     }
 
     .form-group {
@@ -48,7 +120,7 @@
       font-size: 0.9rem;
     }
 
-    input, textarea {
+    input, textarea, select {
       width: 100%;
       padding: 12px;
       background: #0f0f0f;
@@ -59,7 +131,7 @@
       border-radius: 4px;
     }
 
-    input:focus, textarea:focus {
+    input:focus, textarea:focus, select:focus {
       outline: none;
       border-color: #00ffff;
       box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
@@ -96,22 +168,11 @@
       cursor: not-allowed;
     }
 
-    .output-section {
-      margin-top: 40px;
-    }
-
-    .output-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
-    .metrics {
+    .metrics-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 15px;
-      margin-bottom: 20px;
+      margin: 20px 0;
     }
 
     .metric-card {
@@ -130,6 +191,18 @@
     .metric-value {
       font-size: 1.5rem;
       font-weight: bold;
+    }
+
+    .metric-value.high {
+      color: #00ff88;
+    }
+
+    .metric-value.medium {
+      color: #ffaa00;
+    }
+
+    .metric-value.low {
+      color: #ff5555;
     }
 
     pre {
@@ -168,18 +241,121 @@
       color: #666;
       margin-top: 5px;
     }
+
+    .section-title {
+      font-size: 1.5rem;
+      margin: 30px 0 15px 0;
+      color: #00ffff;
+    }
+
+    .array-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .array-list li {
+      background: #0f0f0f;
+      padding: 10px;
+      margin-bottom: 5px;
+      border-left: 3px solid #00ff88;
+    }
+
+    .api-key-section {
+      background: #1a1a2e;
+      padding: 15px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      border: 1px solid #00ffff;
+    }
+
+    .provider-select {
+      margin-bottom: 20px;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Binah-Σ</h1>
-    <p class="subtitle">Cognitive Decision Infrastructure — Structured Evaluation Engine</p>
+    <header>
+      <h1>Binah-Σ</h1>
+      <div class="version">v2.0 - Enterprise Decision Engine</div>
+      <p class="subtitle">Cognitive Infrastructure for Structured Decision Evaluation</p>
+    </header>
 
-    <form id="analysisForm">
+    <div class="tabs">
+      <div class="tab active" data-tab="examples">Pre-loaded Examples</div>
+      <div class="tab" data-tab="custom">Custom Analysis</div>
+      <div class="tab" data-tab="pricing">Pricing</div>
+    </div>
+
+    <!-- Examples Tab -->
+    <div class="tab-content active" id="examples-tab">
+      <h2 class="section-title">Click an Example to Analyze</h2>
+      <div class="examples-grid">
+        <div class="example-card" data-example="twitter">
+          <div class="example-title">💼 Elon Musk: Fire 50% of Twitter?</div>
+          <div class="example-desc">Evaluate the decision to drastically reduce workforce at a social media platform</div>
+        </div>
+
+        <div class="example-card" data-example="pharma">
+          <div class="example-title">💊 Pharma: Donate Vaccines?</div>
+          <div class="example-desc">Should pharmaceutical companies donate COVID vaccines to developing nations?</div>
+        </div>
+
+        <div class="example-card" data-example="startup">
+          <div class="example-title">🚀 Startup: VC or Bootstrap?</div>
+          <div class="example-desc">Should a profitable startup raise venture capital or stay bootstrapped?</div>
+        </div>
+
+        <div class="example-card" data-example="ai">
+          <div class="example-title">🤖 OpenAI: Open-Source AGI?</div>
+          <div class="example-desc">Should advanced AI systems be made open-source?</div>
+        </div>
+
+        <div class="example-card" data-example="climate">
+          <div class="example-title">🌍 Company: Net-Zero by 2030?</div>
+          <div class="example-desc">Manufacturing company considering aggressive carbon neutrality commitment</div>
+        </div>
+
+        <div class="example-card" data-example="remote">
+          <div class="example-title">🏢 Return to Office Mandate?</div>
+          <div class="example-desc">Fortune 500 company deciding on full-time office return policy</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Custom Analysis Tab -->
+    <div class="tab-content" id="custom-tab">
+      <div class="api-key-section">
+        <label for="apiKey">API Key (Optional for Demo)</label>
+        <input type="password" id="apiKey" placeholder="Leave blank to use demo endpoint (v1)" />
+        <div class="hint">Get your API key from the console when running the server</div>
+      </div>
+
+      <div class="provider-select">
+        <label for="provider">LLM Provider</label>
+        <select id="provider">
+          <option value="">Auto (Default)</option>
+          <option value="mistral">Mistral AI</option>
+          <option value="gemini">Google Gemini</option>
+          <option value="deepseek">DeepSeek</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="industry">Industry</label>
+        <select id="industry">
+          <option value="general">General</option>
+          <option value="healthcare">Healthcare</option>
+          <option value="finance">Finance</option>
+          <option value="technology">Technology</option>
+          <option value="nonprofit">Nonprofit</option>
+        </select>
+      </div>
+
       <div class="form-group">
         <label for="context">Context</label>
         <textarea id="context" required placeholder="Describe the decision context and background..."></textarea>
-        <div class="hint">Provide relevant background information for the decision</div>
+        <div class="hint">Provide relevant background information</div>
       </div>
 
       <div class="form-group">
@@ -197,7 +373,7 @@
       <div class="form-group">
         <label for="constraints">Constraints</label>
         <textarea id="constraints" required placeholder="budget, timeline, regulations, resources"></textarea>
-        <div class="hint">Comma-separated list of limitations and requirements</div>
+        <div class="hint">Comma-separated list of limitations</div>
       </div>
 
       <div class="form-group">
@@ -206,17 +382,76 @@
         <div class="hint">Expected timeframe for impact assessment</div>
       </div>
 
-      <button type="submit" id="submitBtn">Run Binah-Σ Analysis</button>
-    </form>
+      <button onclick="runAnalysis()" id="submitBtn">Run Binah-Σ Analysis</button>
+    </div>
 
-    <div id="outputSection" class="output-section" style="display: none;">
-      <div class="output-header">
-        <h2>Analysis Results</h2>
+    <!-- Pricing Tab -->
+    <div class="tab-content" id="pricing-tab">
+      <h2 class="section-title">Binah-Σ Pricing</h2>
+      <div class="examples-grid">
+        <div class="metric-card">
+          <div class="example-title">Demo Tier</div>
+          <div class="metric-value">FREE</div>
+          <ul style="margin-top: 15px; color: #888; font-size: 0.85rem;">
+            <li>10 analyses/month</li>
+            <li>Basic API access</li>
+            <li>Community support</li>
+          </ul>
+        </div>
+
+        <div class="metric-card" style="border-color: #00ffff;">
+          <div class="example-title">Startup</div>
+          <div class="metric-value" style="color: #00ffff;">$99/mo</div>
+          <ul style="margin-top: 15px; color: #888; font-size: 0.85rem;">
+            <li>100 analyses/month</li>
+            <li>All LLM providers</li>
+            <li>Email support</li>
+            <li>API documentation</li>
+          </ul>
+        </div>
+
+        <div class="metric-card">
+          <div class="example-title">Professional</div>
+          <div class="metric-value">$499/mo</div>
+          <ul style="margin-top: 15px; color: #888; font-size: 0.85rem;">
+            <li>1,000 analyses/month</li>
+            <li>Priority support</li>
+            <li>Webhook integrations</li>
+            <li>White-label exports</li>
+            <li>Team collaboration</li>
+          </ul>
+        </div>
+
+        <div class="metric-card" style="border-color: #ffaa00;">
+          <div class="example-title">Enterprise</div>
+          <div class="metric-value" style="color: #ffaa00;">Custom</div>
+          <ul style="margin-top: 15px; color: #888; font-size: 0.85rem;">
+            <li>Unlimited analyses</li>
+            <li>On-premise deployment</li>
+            <li>Custom model tuning</li>
+            <li>SLA 99.9%</li>
+            <li>Dedicated support</li>
+          </ul>
+        </div>
       </div>
+    </div>
 
-      <div id="metrics" class="metrics"></div>
+    <!-- Results Section -->
+    <div id="outputSection" style="display: none;">
+      <h2 class="section-title">Analysis Results</h2>
 
-      <h3 style="margin-top: 30px; margin-bottom: 10px;">Full Response</h3>
+      <div id="metrics" class="metrics-grid"></div>
+
+      <h3 class="section-title">Key Tensions</h3>
+      <ul id="tensions" class="array-list"></ul>
+
+      <h3 class="section-title">Unintended Consequences</h3>
+      <ul id="consequences" class="array-list"></ul>
+
+      <h3 class="section-title">Recommendation</h3>
+      <div id="recommendation" style="background: #0f0f0f; padding: 15px; border-left: 3px solid #00ff88; margin-bottom: 20px;"></div>
+
+      <h3 class="section-title">Full Response</h3>
       <pre id="output"></pre>
     </div>
 
@@ -228,15 +463,90 @@
   </div>
 
   <script>
-    // Production URL
-    const API_URL = 'https://binahsigma.onrender.com/binah-sigma/analyze';
+    // Production URLs
+    const API_URL_V1 = 'https://binahsigma.onrender.com/binah-sigma/analyze';
+    const API_URL_V2 = 'https://binahsigma.onrender.com/v2/analyze';
 
-    // Development URL (uncomment for local testing)
-    // const API_URL = 'http://localhost:8000/binah-sigma/analyze';
+    // Development URLs (uncomment for local testing)
+    // const API_URL_V1 = 'http://localhost:8000/binah-sigma/analyze';
+    // const API_URL_V2 = 'http://localhost:8000/v2/analyze';
 
-    document.getElementById('analysisForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      await runAnalysis();
+    const EXAMPLES = {
+      twitter: {
+        context: "Twitter/X under new ownership is facing $13B in debt and declining ad revenue. Company is burning cash and needs to cut costs dramatically.",
+        decision_question: "Should we lay off 50% of the workforce to reduce costs?",
+        stakeholders: ["employees", "users", "advertisers", "creditors", "tech ecosystem"],
+        constraints: ["$13B debt burden", "declining revenue", "competitive pressure", "brand reputation"],
+        time_horizon: "12 months"
+      },
+      pharma: {
+        context: "Major pharmaceutical company developed a COVID vaccine. Developing nations lack access due to high costs. Company faces pressure from activists and governments.",
+        decision_question: "Should we donate 30% of our vaccine production to low-income countries at cost?",
+        stakeholders: ["shareholders", "patients in developing countries", "governments", "public health officials"],
+        constraints: ["$10B R&D investment", "shareholder expectations", "production capacity", "distribution logistics"],
+        time_horizon: "2 years"
+      },
+      startup: {
+        context: "SaaS startup reached $5M ARR profitably with 40% growth rate. Multiple VCs offering $20M at $100M valuation. Founders own 100% equity currently.",
+        decision_question: "Should we raise Series A venture capital or continue bootstrapping?",
+        stakeholders: ["founders", "employees", "customers", "potential investors"],
+        constraints: ["maintaining control vs scaling faster", "competitive market", "hiring needs", "runway"],
+        time_horizon: "3 years"
+      },
+      ai: {
+        context: "OpenAI has developed AGI-level capabilities. Pressure from open-source community to release weights. Concerns about weaponization and misuse.",
+        decision_question: "Should we open-source our AGI model?",
+        stakeholders: ["AI researchers", "governments", "humanity", "competitors", "safety researchers"],
+        constraints: ["safety concerns", "geopolitical risk", "competitive advantage", "mission alignment"],
+        time_horizon: "5-10 years"
+      },
+      climate: {
+        context: "Manufacturing company with $2B revenue, 40% profit margin. ESG investors pushing for net-zero commitment. Would require $500M capex investment.",
+        decision_question: "Should we commit to net-zero carbon emissions by 2030?",
+        stakeholders: ["shareholders", "employees", "customers", "regulators", "environmental groups"],
+        constraints: ["$500M investment needed", "technology maturity", "competitive pressure", "regulatory timeline"],
+        time_horizon: "7 years"
+      },
+      remote: {
+        context: "Fortune 500 company with 50,000 employees. Post-COVID productivity is 95% of in-office levels. Real estate leases worth $200M/year. Some competitors going full remote.",
+        decision_question: "Should we mandate 5 days/week return to office?",
+        stakeholders: ["employees", "management", "real estate", "shareholders", "customers"],
+        constraints: ["lease commitments", "talent retention", "productivity metrics", "company culture"],
+        time_horizon: "1 year"
+      }
+    };
+
+    // Tab switching
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.tab + '-tab').classList.add('active');
+      });
+    });
+
+    // Example cards
+    document.querySelectorAll('.example-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const example = EXAMPLES[card.dataset.example];
+
+        document.getElementById('context').value = example.context;
+        document.getElementById('question').value = example.decision_question;
+        document.getElementById('stakeholders').value = example.stakeholders.join(', ');
+        document.getElementById('constraints').value = example.constraints.join(', ');
+        document.getElementById('time').value = example.time_horizon;
+
+        // Switch to custom tab
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.querySelector('[data-tab="custom"]').classList.add('active');
+        document.getElementById('custom-tab').classList.add('active');
+
+        // Scroll to form
+        document.getElementById('context').scrollIntoView({ behavior: 'smooth' });
+      });
     });
 
     async function runAnalysis() {
@@ -245,45 +555,53 @@
       const outputSection = document.getElementById('outputSection');
       const errorDiv = document.getElementById('error');
 
-      // Reset UI
       submitBtn.disabled = true;
       loading.style.display = 'block';
       outputSection.style.display = 'none';
       errorDiv.style.display = 'none';
 
+      const apiKey = document.getElementById('apiKey').value;
+      const provider = document.getElementById('provider').value;
+      const industry = document.getElementById('industry').value;
+
       const payload = {
         context: document.getElementById('context').value,
         decision_question: document.getElementById('question').value,
-        stakeholders: document.getElementById('stakeholders').value
-          .split(',')
-          .map(s => s.trim())
-          .filter(s => s),
-        constraints: document.getElementById('constraints').value
-          .split(',')
-          .map(s => s.trim())
-          .filter(s => s),
-        time_horizon: document.getElementById('time').value
+        stakeholders: document.getElementById('stakeholders').value.split(',').map(s => s.trim()).filter(s => s),
+        constraints: document.getElementById('constraints').value.split(',').map(s => s.trim()).filter(s => s),
+        time_horizon: document.getElementById('time').value,
+        provider: provider || null,
+        industry: industry || 'general'
       };
 
+      const url = apiKey ? API_URL_V2 : API_URL_V1;
+      const headers = {
+        'Content-Type': 'application/json'
+      };
+
+      if (apiKey) {
+        headers['Authorization'] = `Bearer ${apiKey}`;
+      }
+
       try {
-        const res = await fetch(API_URL, {
+        const res = await fetch(url, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: headers,
           body: JSON.stringify(payload)
         });
 
         if (!res.ok) {
           const errorData = await res.json();
-          throw new Error(errorData.detail?.error || 'API request failed');
+          throw new Error(errorData.detail?.error || errorData.detail || 'API request failed');
         }
 
         const data = await res.json();
 
-        // Display metrics
         displayMetrics(data);
-
-        // Display full JSON
+        displayArrays(data);
+        document.getElementById('recommendation').textContent = data.binah_recommendation;
         document.getElementById('output').textContent = JSON.stringify(data, null, 2);
+
         outputSection.style.display = 'block';
 
       } catch (error) {
@@ -299,20 +617,34 @@
     function displayMetrics(data) {
       const metricsDiv = document.getElementById('metrics');
 
+      const indexClass = data.binah_sigma_index >= 0.75 ? 'high' : data.binah_sigma_index >= 0.5 ? 'medium' : 'low';
+
       const metrics = [
-        { label: 'Binah-Σ Index', value: data.binah_sigma_index.toFixed(2) },
-        { label: 'Confidence', value: data.binah_sigma_confidence.toFixed(2) },
-        { label: 'Coherence', value: data.decision_coherence },
-        { label: 'Ethical Alignment', value: data.ethical_alignment },
-        { label: 'Systemic Risk', value: data.systemic_risk }
+        { label: 'Binah-Σ Index', value: data.binah_sigma_index.toFixed(2), class: indexClass },
+        { label: 'Confidence', value: data.binah_sigma_confidence.toFixed(2), class: 'high' },
+        { label: 'Coherence', value: data.decision_coherence, class: 'medium' },
+        { label: 'Ethical Alignment', value: data.ethical_alignment, class: 'medium' },
+        { label: 'Systemic Risk', value: data.systemic_risk, class: data.systemic_risk === 'Low' ? 'high' : 'low' }
       ];
+
+      if (data.metadata?.provider_used) {
+        metrics.push({ label: 'LLM Provider', value: data.metadata.provider_used, class: 'high' });
+      }
 
       metricsDiv.innerHTML = metrics.map(m => `
         <div class="metric-card">
           <div class="metric-label">${m.label}</div>
-          <div class="metric-value">${m.value}</div>
+          <div class="metric-value ${m.class}">${m.value}</div>
         </div>
       `).join('');
+    }
+
+    function displayArrays(data) {
+      const tensionsUl = document.getElementById('tensions');
+      const consequencesUl = document.getElementById('consequences');
+
+      tensionsUl.innerHTML = data.key_tensions.map(t => `<li>${t}</li>`).join('');
+      consequencesUl.innerHTML = data.unintended_consequences.map(c => `<li>${c}</li>`).join('');
     }
   </script>
 </body>

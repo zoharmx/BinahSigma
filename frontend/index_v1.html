@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Binah-Σ Decision Analysis</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Courier New', monospace;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+      color: #00ff88;
+      padding: 40px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      text-shadow: 0 0 10px #00ff88;
+    }
+
+    .subtitle {
+      color: #888;
+      margin-bottom: 40px;
+      font-size: 0.9rem;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #00ff88;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      background: #0f0f0f;
+      border: 1px solid #00ff88;
+      color: #00ff88;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      border-radius: 4px;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #00ffff;
+      box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      background: #00ff88;
+      color: #0a0a0a;
+      border: none;
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 4px;
+      margin-top: 10px;
+      transition: all 0.3s;
+    }
+
+    button:hover {
+      background: #00ffff;
+      box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+    }
+
+    button:disabled {
+      background: #333;
+      color: #666;
+      cursor: not-allowed;
+    }
+
+    .output-section {
+      margin-top: 40px;
+    }
+
+    .output-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .metric-card {
+      background: #0f0f0f;
+      border: 1px solid #00ff88;
+      padding: 15px;
+      border-radius: 4px;
+    }
+
+    .metric-label {
+      font-size: 0.75rem;
+      color: #888;
+      margin-bottom: 5px;
+    }
+
+    .metric-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    pre {
+      background: #0f0f0f;
+      color: #00ff88;
+      padding: 20px;
+      border: 1px solid #00ff88;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #00ffff;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .error {
+      background: #ff0000;
+      color: #fff;
+      padding: 15px;
+      border-radius: 4px;
+      margin-top: 20px;
+    }
+
+    .hint {
+      font-size: 0.75rem;
+      color: #666;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Binah-Σ</h1>
+    <p class="subtitle">Cognitive Decision Infrastructure — Structured Evaluation Engine</p>
+
+    <form id="analysisForm">
+      <div class="form-group">
+        <label for="context">Context</label>
+        <textarea id="context" required placeholder="Describe the decision context and background..."></textarea>
+        <div class="hint">Provide relevant background information for the decision</div>
+      </div>
+
+      <div class="form-group">
+        <label for="question">Decision Question</label>
+        <input type="text" id="question" required placeholder="What is the specific decision to be made?" />
+        <div class="hint">Frame as a clear, specific question</div>
+      </div>
+
+      <div class="form-group">
+        <label for="stakeholders">Stakeholders</label>
+        <textarea id="stakeholders" required placeholder="employees, customers, investors, community"></textarea>
+        <div class="hint">Comma-separated list of affected parties</div>
+      </div>
+
+      <div class="form-group">
+        <label for="constraints">Constraints</label>
+        <textarea id="constraints" required placeholder="budget, timeline, regulations, resources"></textarea>
+        <div class="hint">Comma-separated list of limitations and requirements</div>
+      </div>
+
+      <div class="form-group">
+        <label for="time">Time Horizon</label>
+        <input type="text" id="time" required placeholder="3 months, 2 years, long-term" />
+        <div class="hint">Expected timeframe for impact assessment</div>
+      </div>
+
+      <button type="submit" id="submitBtn">Run Binah-Σ Analysis</button>
+    </form>
+
+    <div id="outputSection" class="output-section" style="display: none;">
+      <div class="output-header">
+        <h2>Analysis Results</h2>
+      </div>
+
+      <div id="metrics" class="metrics"></div>
+
+      <h3 style="margin-top: 30px; margin-bottom: 10px;">Full Response</h3>
+      <pre id="output"></pre>
+    </div>
+
+    <div id="loading" class="loading" style="display: none;">
+      ⚡ Binah-Σ analyzing decision...
+    </div>
+
+    <div id="error" class="error" style="display: none;"></div>
+  </div>
+
+  <script>
+    // Production URL
+    const API_URL = 'https://binahsigma.onrender.com/binah-sigma/analyze';
+
+    // Development URL (uncomment for local testing)
+    // const API_URL = 'http://localhost:8000/binah-sigma/analyze';
+
+    document.getElementById('analysisForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      await runAnalysis();
+    });
+
+    async function runAnalysis() {
+      const submitBtn = document.getElementById('submitBtn');
+      const loading = document.getElementById('loading');
+      const outputSection = document.getElementById('outputSection');
+      const errorDiv = document.getElementById('error');
+
+      // Reset UI
+      submitBtn.disabled = true;
+      loading.style.display = 'block';
+      outputSection.style.display = 'none';
+      errorDiv.style.display = 'none';
+
+      const payload = {
+        context: document.getElementById('context').value,
+        decision_question: document.getElementById('question').value,
+        stakeholders: document.getElementById('stakeholders').value
+          .split(',')
+          .map(s => s.trim())
+          .filter(s => s),
+        constraints: document.getElementById('constraints').value
+          .split(',')
+          .map(s => s.trim())
+          .filter(s => s),
+        time_horizon: document.getElementById('time').value
+      };
+
+      try {
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+          const errorData = await res.json();
+          throw new Error(errorData.detail?.error || 'API request failed');
+        }
+
+        const data = await res.json();
+
+        // Display metrics
+        displayMetrics(data);
+
+        // Display full JSON
+        document.getElementById('output').textContent = JSON.stringify(data, null, 2);
+        outputSection.style.display = 'block';
+
+      } catch (error) {
+        errorDiv.textContent = `Error: ${error.message}`;
+        errorDiv.style.display = 'block';
+        console.error('Analysis failed:', error);
+      } finally {
+        loading.style.display = 'none';
+        submitBtn.disabled = false;
+      }
+    }
+
+    function displayMetrics(data) {
+      const metricsDiv = document.getElementById('metrics');
+
+      const metrics = [
+        { label: 'Binah-Σ Index', value: data.binah_sigma_index.toFixed(2) },
+        { label: 'Confidence', value: data.binah_sigma_confidence.toFixed(2) },
+        { label: 'Coherence', value: data.decision_coherence },
+        { label: 'Ethical Alignment', value: data.ethical_alignment },
+        { label: 'Systemic Risk', value: data.systemic_risk }
+      ];
+
+      metricsDiv.innerHTML = metrics.map(m => `
+        <div class="metric-card">
+          <div class="metric-label">${m.label}</div>
+          <div class="metric-value">${m.value}</div>
+        </div>
+      `).join('');
+    }
+  </script>
+</body>
+</html>
