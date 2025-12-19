@@ -5,6 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Binah-Σ | Enterprise Cognitive Decision Infrastructure</title>
   <meta name="description" content="Transform complex decisions into auditable insights. Enterprise-grade AI decision engine with transparent scoring, ethical safeguards, and multi-provider LLM support.">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="FAVICON.png">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://binahsigma.onrender.com/">
+  <meta property="og:title" content="Binah-Σ | Enterprise Cognitive Decision Infrastructure">
+  <meta property="og:description" content="Transform complex decisions into auditable insights. Enterprise-grade AI decision engine with transparent scoring, ethical safeguards, and multi-provider LLM support.">
+  <meta property="og:image" content="IMAGE_SOCIAL.png">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://binahsigma.onrender.com/">
+  <meta property="twitter:title" content="Binah-Σ | Enterprise Cognitive Decision Infrastructure">
+  <meta property="twitter:description" content="Transform complex decisions into auditable insights. Enterprise-grade AI decision engine with transparent scoring, ethical safeguards, and multi-provider LLM support.">
+  <meta property="twitter:image" content="IMAGE_SOCIAL.png">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
 
@@ -85,6 +102,9 @@
     }
 
     .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       font-size: 1.8rem;
       font-weight: 900;
       background: var(--gradient-1);
@@ -92,6 +112,11 @@
       -webkit-text-fill-color: transparent;
       background-clip: text;
       letter-spacing: -1px;
+    }
+
+    .logo img {
+      height: 40px;
+      width: auto;
     }
 
     .nav-links {
@@ -235,6 +260,30 @@
       color: var(--dark);
     }
 
+    /* Video Section */
+    .video-section {
+      padding: 100px 5%;
+      max-width: 1400px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .video-container {
+      position: relative;
+      max-width: 1000px;
+      margin: 0 auto;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 255, 136, 0.3);
+      border: 2px solid var(--primary);
+    }
+
+    .video-container video {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
     /* Stats Section */
     .stats {
       padding: 80px 5%;
@@ -340,6 +389,83 @@
       color: var(--text-muted);
       font-size: 1rem;
       line-height: 1.8;
+    }
+
+    /* About Section */
+    .about-section {
+      padding: 100px 5%;
+      max-width: 1400px;
+      margin: 0 auto;
+      background: rgba(26, 26, 46, 0.3);
+    }
+
+    .about-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      margin-top: 60px;
+    }
+
+    .about-text {
+      padding: 20px;
+    }
+
+    .about-text h3 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .about-text p {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .about-text .highlight {
+      font-size: 1.3rem;
+      color: var(--secondary);
+      font-weight: 600;
+      font-style: italic;
+      margin: 30px 0;
+      padding: 20px;
+      border-left: 4px solid var(--primary);
+      background: rgba(0, 255, 136, 0.05);
+    }
+
+    .about-image {
+      position: relative;
+    }
+
+    .about-image img {
+      width: 100%;
+      height: auto;
+      border-radius: 20px;
+      border: 2px solid var(--primary);
+      box-shadow: 0 20px 60px rgba(0, 255, 136, 0.2);
+    }
+
+    .about-list {
+      list-style: none;
+      padding: 0;
+      margin-top: 20px;
+    }
+
+    .about-list li {
+      padding: 15px 0;
+      font-size: 1.1rem;
+      color: var(--text);
+      border-bottom: 1px solid rgba(0, 255, 136, 0.1);
+    }
+
+    .about-list li:before {
+      content: "▸ ";
+      color: var(--primary);
+      font-weight: bold;
+      margin-right: 10px;
     }
 
     /* Pricing Section */
@@ -539,6 +665,11 @@
         grid-template-columns: 1fr;
       }
 
+      .about-content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
       .stats {
         grid-template-columns: repeat(2, 1fr);
       }
@@ -591,9 +722,13 @@
 
   <!-- Navigation -->
   <nav>
-    <div class="logo">Binah-Σ</div>
+    <div class="logo">
+      <img src="LOGO.png" alt="Binah-Σ Logo">
+      Binah-Σ
+    </div>
     <ul class="nav-links">
       <li><a href="#features">Features</a></li>
+      <li><a href="#about">About</a></li>
       <li><a href="#pricing">Pricing</a></li>
       <li><a href="#docs">Docs</a></li>
       <li><a href="https://github.com/zoharmx/BinahSigma" target="_blank">GitHub</a></li>
@@ -615,6 +750,20 @@
         <a href="app.html" class="btn-primary">Try Demo →</a>
         <a href="https://binahsigma.onrender.com/docs" class="btn-secondary" target="_blank">API Docs</a>
       </div>
+    </div>
+  </section>
+
+  <!-- Video Section -->
+  <section class="video-section">
+    <h2 class="section-title">See Binah-Σ in Action</h2>
+    <p class="section-subtitle">
+      Discover how our decision engine transforms complex strategic questions into actionable insights
+    </p>
+    <div class="video-container fade-in">
+      <video controls autoplay muted loop>
+        <source src="VIDEO.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
     </div>
   </section>
 
@@ -698,6 +847,59 @@
           Per-minute, per-day, and per-month limits by tier. Prevents abuse
           while ensuring fair access. Scales from 10 to unlimited requests.
         </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="about-section" id="about">
+    <h2 class="section-title">The Dashboard for the Boardroom</h2>
+    <p class="section-subtitle">
+      Transforming blind decision-making into measurable, auditable corporate intelligence
+    </p>
+
+    <div class="about-content">
+      <div class="about-text fade-in">
+        <h3>1. The Problem: Betting Instead of Measuring</h3>
+        <p>
+          Companies operate blindly. They make million-dollar decisions (layoffs, mergers, launches)
+          based on PowerPoints, intuition, and "who shouts loudest."
+        </p>
+        <p>
+          <strong>The Cost:</strong> $500 billion annually lost in fines, reputational crises,
+          and strategic failures (e.g., Boeing 737 MAX, Wells Fargo, FTX).
+        </p>
+        <p>
+          <strong>The Gap:</strong> Tools exist to measure finances (SAP) and sales (Salesforce),
+          but nothing exists to measure decision quality before execution.
+        </p>
+
+        <h3>2. The Solution: Binah-Σ</h3>
+        <p>
+          Binah-Σ is not a chatbot—it's a preventive audit system. We convert complex qualitative
+          decisions into auditable numerical metrics (Score 0.0 - 1.0).
+        </p>
+        <ul class="about-list">
+          <li><strong>Input:</strong> The proposed decision (e.g., "Should we close the Ohio plant?")</li>
+          <li><strong>Process:</strong> Analysis of coherence, ethics, systemic risk, and biases</li>
+          <li><strong>Output:</strong> A Risk Score and unintended consequences report</li>
+        </ul>
+
+        <div class="highlight">
+          "Just as a pilot doesn't land with intuition alone but with instruments,
+          a CEO shouldn't decide without Binah-Σ."
+        </div>
+
+        <h3>3. Why Now & Why Us</h3>
+        <ul class="about-list">
+          <li><strong>Imminent Regulation:</strong> New laws (EU CSRD) require corporate decisions to be auditable and explainable</li>
+          <li><strong>Chatbot Fatigue:</strong> Companies tried ChatGPT and know it "hallucinates"—they seek deterministic, traceable systems</li>
+          <li><strong>Data Moat:</strong> Processing thousands of decisions builds the world's first corporate decision quality benchmark</li>
+        </ul>
+      </div>
+
+      <div class="about-image fade-in">
+        <img src="EJEMPLO.png" alt="Binah-Σ Decision Analysis Example">
       </div>
     </div>
   </section>

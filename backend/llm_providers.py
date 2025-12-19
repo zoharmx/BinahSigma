@@ -86,8 +86,15 @@ class MistralProvider(LLMProvider):
 class GeminiProvider(LLMProvider):
     """Google Gemini provider"""
 
-    def __init__(self, api_key: str = None, model: str = "gemini-1.5-flash"):
+    def __init__(self, api_key: str = None, model: str = "gemini-2.5-flash"):
         import google.generativeai as genai
+
+        # DEBUG: Log version to verify Render is using updated library
+        print(f"========================================")
+        print(f"DEBUG: GEMINI PROVIDER INITIALIZING")
+        print(f"DEBUG: google-generativeai VERSION: {genai.__version__}")
+        print(f"DEBUG: Model requested: {model}")
+        print(f"========================================")
 
         api_key = api_key or os.getenv("GEMINI_API_KEY")
         super().__init__(api_key, model)
