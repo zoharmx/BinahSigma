@@ -137,6 +137,30 @@
       color: var(--primary);
     }
 
+    .lang-toggle {
+      padding: 8px 16px;
+      background: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.9rem;
+    }
+
+    .lang-toggle:hover {
+      background: var(--primary);
+      color: var(--dark);
+    }
+
+    .lang-icon {
+      font-size: 1.1rem;
+    }
+
     .cta-nav {
       padding: 10px 25px;
       background: var(--gradient-1);
@@ -1083,13 +1107,17 @@
       Binah-Σ
     </div>
     <ul class="nav-links">
-      <li><a href="#features">Features</a></li>
-      <li><a href="#about">About</a></li>
-      <li><a href="#pricing">Pricing</a></li>
-      <li><a href="#contact">Contact</a></li>
+      <li><a href="#features" data-i18n="nav.features">Features</a></li>
+      <li><a href="#about" data-i18n="nav.about">About</a></li>
+      <li><a href="#pricing" data-i18n="nav.pricing">Pricing</a></li>
+      <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
       <li><a href="https://github.com/zoharmx/BinahSigma" target="_blank" rel="noopener">GitHub</a></li>
     </ul>
-    <a href="app.html" class="cta-nav">Launch App →</a>
+    <button id="langToggle" class="lang-toggle" aria-label="Change language" title="English/Español">
+      <span class="lang-icon">🌐</span>
+      <span id="currentLang">EN</span>
+    </button>
+    <a href="app.html" class="cta-nav" data-i18n="nav.launch">Launch App →</a>
     <button class="mobile-menu-btn" aria-label="Toggle mobile menu" aria-expanded="false">☰</button>
   </nav>
 
@@ -1365,8 +1393,8 @@
 
   <!-- Pricing Section -->
   <section class="pricing" id="pricing">
-    <h2 class="section-title">Simple, Transparent Pricing</h2>
-    <p class="section-subtitle">
+    <h2 class="section-title" data-i18n="pricing.title">Simple, Transparent Pricing</h2>
+    <p class="section-subtitle" data-i18n="pricing.subtitle">
       From startups to enterprises. No hidden fees. Cancel anytime.
     </p>
 
@@ -1376,7 +1404,7 @@
         <div class="tier-price">$0</div>
         <div class="tier-period">Forever free</div>
         <ul class="tier-features">
-          <li>10 requests/month</li>
+          <li>3 requests/month</li>
           <li>All LLM providers</li>
           <li>Transparent scoring</li>
           <li>Quality validation</li>
@@ -1387,7 +1415,7 @@
 
       <div class="pricing-card fade-in">
         <div class="tier-name">Startup</div>
-        <div class="tier-price">$99</div>
+        <div class="tier-price">$799</div>
         <div class="tier-period">per month</div>
         <ul class="tier-features">
           <li>100 requests/month</li>
@@ -1401,7 +1429,7 @@
 
       <div class="pricing-card featured fade-in">
         <div class="tier-name">Professional</div>
-        <div class="tier-price">$499</div>
+        <div class="tier-price">$4,999</div>
         <div class="tier-period">per month</div>
         <ul class="tier-features">
           <li>1,000 requests/month</li>
@@ -1431,35 +1459,35 @@
 
   <!-- Contact Section -->
   <section class="contact-section" id="contact">
-    <h2 class="section-title">Get in Touch</h2>
-    <p class="section-subtitle">
+    <h2 class="section-title" data-i18n="contact.title">Get in Touch</h2>
+    <p class="section-subtitle" data-i18n="contact.subtitle">
       Interested in Binah-Σ for your organization? Let's talk about how we can help transform your decision-making process.
     </p>
 
     <form id="contactForm" aria-label="Contact form">
       <div class="form-grid">
         <div class="form-group">
-          <label for="name">Full Name *</label>
+          <label for="name" data-i18n="contact.name">Full Name *</label>
           <input type="text" id="name" name="name" required aria-required="true" placeholder="John Doe">
         </div>
 
         <div class="form-group">
-          <label for="email">Email *</label>
+          <label for="email" data-i18n="contact.email">Email *</label>
           <input type="email" id="email" name="email" required aria-required="true" placeholder="john@company.com">
         </div>
 
         <div class="form-group">
-          <label for="company">Company</label>
+          <label for="company" data-i18n="contact.company">Company</label>
           <input type="text" id="company" name="company" placeholder="Your Company">
         </div>
 
         <div class="form-group">
-          <label for="role">Role</label>
+          <label for="role" data-i18n="contact.role">Role</label>
           <input type="text" id="role" name="role" placeholder="CEO, CTO, Product Manager">
         </div>
 
         <div class="form-group full-width">
-          <label for="interest">Interest *</label>
+          <label for="interest" data-i18n="contact.interest">Interest *</label>
           <select id="interest" name="interest" required aria-required="true">
             <option value="">Select your interest</option>
             <option value="demo">Request Demo</option>
@@ -1472,18 +1500,18 @@
         </div>
 
         <div class="form-group full-width">
-          <label for="message">Message *</label>
+          <label for="message" data-i18n="contact.message">Message *</label>
           <textarea id="message" name="message" required aria-required="true" placeholder="Tell us about your decision-making challenges and how we can help..."></textarea>
         </div>
       </div>
 
-      <button type="submit" class="form-submit" id="submitBtn">Send Message</button>
+      <button type="submit" class="form-submit" id="submitBtn" data-i18n="contact.submit">Send Message</button>
 
-      <div id="formSuccess" class="form-success" role="alert">
+      <div id="formSuccess" class="form-success" role="alert" data-i18n="contact.success">
         ✓ Message sent successfully! We'll get back to you within 24 hours.
       </div>
 
-      <div id="formError" class="form-error" role="alert">
+      <div id="formError" class="form-error" role="alert" data-i18n="contact.error">
         ✗ Failed to send message. Please try again or email us directly at contact@binahsigma.com
       </div>
     </form>
@@ -1665,12 +1693,12 @@
       // Assumptions:
       // - Bad decisions cost 5% of revenue on average
       // - Binah-Σ reduces bad decisions by 80%
-      // - Annual cost is Professional tier $499/mo = $5,988/year
+      // - Annual cost is Professional tier $4,999/mo = $59,988/year
       const costPerBadDecision = revenue * 0.05;
       const badDecisionsPerYear = decisions * (failureRate / 100);
       const totalLoss = badDecisionsPerYear * costPerBadDecision;
       const avoidedLoss = totalLoss * 0.8; // 80% reduction
-      const implementationCost = 5988; // Professional tier annual
+      const implementationCost = 59988; // Professional tier annual
       const netSavings = avoidedLoss - implementationCost;
       const roiMultiple = netSavings / implementationCost;
       const timeSaved = decisions * 20; // 20 hours per decision
@@ -1699,6 +1727,96 @@
 
     // Initial calculation
     calculateROI();
+
+    // ========================================
+    // I18N - INTERNATIONALIZATION SYSTEM
+    // ========================================
+    const translations = {
+      en: {
+        'nav.features': 'Features',
+        'nav.about': 'About',
+        'nav.pricing': 'Pricing',
+        'nav.contact': 'Contact',
+        'nav.launch': 'Launch App →',
+        'hero.title': 'Decision Intelligence<br>for the AI Era',
+        'hero.subtitle': 'Enterprise Cognitive Infrastructure',
+        'hero.description': 'Transform complex decisions into auditable insights with transparent scoring, ethical safeguards, and multi-provider LLM support. Built for startups to Fortune 500.',
+        'hero.tryDemo': 'Try Demo →',
+        'hero.apiDocs': 'API Docs',
+        'pricing.title': 'Simple, Transparent Pricing',
+        'pricing.subtitle': 'From startups to enterprises. No hidden fees. Cancel anytime.',
+        'contact.title': 'Get in Touch',
+        'contact.subtitle': "Interested in Binah-Σ for your organization? Let's talk about how we can help transform your decision-making process.",
+        'contact.name': 'Full Name *',
+        'contact.email': 'Email *',
+        'contact.company': 'Company',
+        'contact.role': 'Role',
+        'contact.interest': 'Interest *',
+        'contact.message': 'Message *',
+        'contact.submit': 'Send Message',
+        'contact.success': "✓ Message sent successfully! We'll get back to you within 24 hours.",
+        'contact.error': '✗ Failed to send message. Please try again or email us directly at contact@binahsigma.com'
+      },
+      es: {
+        'nav.features': 'Características',
+        'nav.about': 'Acerca de',
+        'nav.pricing': 'Precios',
+        'nav.contact': 'Contacto',
+        'nav.launch': 'Lanzar App →',
+        'hero.title': 'Inteligencia de Decisiones<br>para la Era de la IA',
+        'hero.subtitle': 'Infraestructura Cognitiva Empresarial',
+        'hero.description': 'Transforma decisiones complejas en insights auditables con puntuación transparente, salvaguardas éticas y soporte multi-proveedor LLM. Diseñado desde startups hasta Fortune 500.',
+        'hero.tryDemo': 'Probar Demo →',
+        'hero.apiDocs': 'Documentación API',
+        'pricing.title': 'Precios Simples y Transparentes',
+        'pricing.subtitle': 'Desde startups hasta empresas. Sin costos ocultos. Cancela en cualquier momento.',
+        'contact.title': 'Contáctanos',
+        'contact.subtitle': '¿Interesado en Binah-Σ para tu organización? Hablemos sobre cómo podemos ayudar a transformar tu proceso de toma de decisiones.',
+        'contact.name': 'Nombre Completo *',
+        'contact.email': 'Correo Electrónico *',
+        'contact.company': 'Empresa',
+        'contact.role': 'Cargo',
+        'contact.interest': 'Interés *',
+        'contact.message': 'Mensaje *',
+        'contact.submit': 'Enviar Mensaje',
+        'contact.success': '✓ ¡Mensaje enviado exitosamente! Te responderemos en 24 horas.',
+        'contact.error': '✗ Error al enviar mensaje. Por favor intenta de nuevo o escríbenos a contact@binahsigma.com'
+      }
+    };
+
+    let currentLang = localStorage.getItem('binahLang') || 'en';
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem('binahLang', lang);
+      document.documentElement.lang = lang;
+      document.getElementById('currentLang').textContent = lang.toUpperCase();
+
+      // Update all elements with data-i18n attribute
+      document.querySelectorAll('[data-i18n]').forEach(element => {
+        const key = element.getAttribute('data-i18n');
+        if (translations[lang][key]) {
+          element.innerHTML = translations[lang][key];
+        }
+      });
+
+      // Update placeholders
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+        const key = element.getAttribute('data-i18n-placeholder');
+        if (translations[lang][key]) {
+          element.placeholder = translations[lang][key];
+        }
+      });
+    }
+
+    // Language toggle button
+    document.getElementById('langToggle').addEventListener('click', () => {
+      const newLang = currentLang === 'en' ? 'es' : 'en';
+      setLanguage(newLang);
+    });
+
+    // Initialize language on page load
+    setLanguage(currentLang);
 
     // Contact Form
     document.getElementById('contactForm').addEventListener('submit', async (e) => {

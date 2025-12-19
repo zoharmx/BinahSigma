@@ -72,6 +72,33 @@
       transform: translateX(-3px);
     }
 
+    .lang-toggle {
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding: 8px 16px;
+      background: transparent;
+      border: 1px solid var(--primary, #00ff88);
+      color: var(--primary, #00ff88);
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.9rem;
+    }
+
+    .lang-toggle:hover {
+      background: var(--primary, #00ff88);
+      color: #0a0a0a;
+    }
+
+    .lang-icon {
+      font-size: 1.1rem;
+    }
+
     .logo-header {
       display: flex;
       align-items: center;
@@ -492,26 +519,30 @@
 <body>
   <div class="container">
     <header>
-      <a href="index.html" class="back-button" aria-label="Back to homepage">
+      <a href="index.html" class="back-button" aria-label="Back to homepage" data-i18n="nav.back">
         ← Back to Home
       </a>
+      <button id="langToggle" class="lang-toggle" aria-label="Change language" title="English/Español">
+        <span class="lang-icon">🌐</span>
+        <span id="currentLang">EN</span>
+      </button>
       <div class="logo-header">
         <img src="LOGO.png" alt="Binah-Σ Logo">
         <h1>Binah-Σ</h1>
       </div>
-      <div class="version">v2.0 - Enterprise Decision Engine</div>
-      <p class="subtitle">Cognitive Infrastructure for Structured Decision Evaluation</p>
+      <div class="version" data-i18n="header.version">v2.0 - Enterprise Decision Engine</div>
+      <p class="subtitle" data-i18n="header.subtitle">Cognitive Infrastructure for Structured Decision Evaluation</p>
     </header>
 
     <div class="tabs" role="tablist" aria-label="Analysis modes">
-      <div class="tab active" data-tab="examples">Pre-loaded Examples</div>
-      <div class="tab" data-tab="custom">Custom Analysis</div>
-      <div class="tab" data-tab="pricing">Pricing</div>
+      <div class="tab active" data-tab="examples" data-i18n="tabs.examples">Pre-loaded Examples</div>
+      <div class="tab" data-tab="custom" data-i18n="tabs.custom">Custom Analysis</div>
+      <div class="tab" data-tab="pricing" data-i18n="tabs.pricing">Pricing</div>
     </div>
 
     <!-- Examples Tab -->
     <div class="tab-content active" id="examples-tab" role="tabpanel" aria-labelledby="examples-tab">
-      <h2 class="section-title">Click an Example to Analyze</h2>
+      <h2 class="section-title" data-i18n="examples.title">Click an Example to Analyze</h2>
       <div class="examples-grid">
         <div class="example-card" data-example="twitter">
           <div class="example-title">💼 Elon Musk: Fire 50% of Twitter?</div>
@@ -604,18 +635,18 @@
         <div class="hint">Expected timeframe for impact assessment</div>
       </div>
 
-      <button onclick="runAnalysis()" id="submitBtn" aria-label="Run decision analysis">Run Binah-Σ Analysis</button>
+      <button onclick="runAnalysis()" id="submitBtn" aria-label="Run decision analysis" data-i18n="button.analyze">Run Binah-Σ Analysis</button>
     </div>
 
     <!-- Pricing Tab -->
     <div class="tab-content" id="pricing-tab" role="tabpanel" aria-labelledby="pricing-tab">
-      <h2 class="section-title">Binah-Σ Pricing</h2>
+      <h2 class="section-title" data-i18n="pricing.title">Binah-Σ Pricing</h2>
       <div class="examples-grid">
         <div class="metric-card">
           <div class="example-title">Demo Tier</div>
           <div class="metric-value">FREE</div>
           <ul style="margin-top: 15px; color: #888; font-size: 0.85rem;">
-            <li>10 analyses/month</li>
+            <li>3 analyses/month</li>
             <li>Basic API access</li>
             <li>Community support</li>
           </ul>
@@ -623,7 +654,7 @@
 
         <div class="metric-card" style="border-color: #00ffff;">
           <div class="example-title">Startup</div>
-          <div class="metric-value" style="color: #00ffff;">$99/mo</div>
+          <div class="metric-value" style="color: #00ffff;">$799/mo</div>
           <ul style="margin-top: 15px; color: #888; font-size: 0.85rem;">
             <li>100 analyses/month</li>
             <li>All LLM providers</li>
@@ -634,7 +665,7 @@
 
         <div class="metric-card">
           <div class="example-title">Professional</div>
-          <div class="metric-value">$499/mo</div>
+          <div class="metric-value">$4,999/mo</div>
           <ul style="margin-top: 15px; color: #888; font-size: 0.85rem;">
             <li>1,000 analyses/month</li>
             <li>Priority support</li>
@@ -660,7 +691,7 @@
 
     <!-- Results Section -->
     <div id="outputSection" style="display: none;" role="region" aria-label="Analysis results">
-      <h2 class="section-title">Analysis Results</h2>
+      <h2 class="section-title" data-i18n="results.title">Analysis Results</h2>
 
       <div id="metrics" class="metrics-grid"></div>
 
@@ -677,7 +708,7 @@
       <pre id="output"></pre>
     </div>
 
-    <div id="loading" class="loading" style="display: none;" role="status" aria-live="polite">
+    <div id="loading" class="loading" style="display: none;" role="status" aria-live="polite" data-i18n="loading.text">
       ⚡ Binah-Σ analyzing decision...
     </div>
 
@@ -874,6 +905,64 @@
       tensionsUl.innerHTML = data.key_tensions.map(t => `<li>${t}</li>`).join('');
       consequencesUl.innerHTML = data.unintended_consequences.map(c => `<li>${c}</li>`).join('');
     }
+
+    // ========================================
+    // I18N - INTERNATIONALIZATION SYSTEM
+    // ========================================
+    const translations = {
+      en: {
+        'nav.back': '← Back to Home',
+        'header.version': 'v2.0 - Enterprise Decision Engine',
+        'header.subtitle': 'Cognitive Infrastructure for Structured Decision Evaluation',
+        'tabs.examples': 'Pre-loaded Examples',
+        'tabs.custom': 'Custom Analysis',
+        'tabs.pricing': 'Pricing',
+        'examples.title': 'Click an Example to Analyze',
+        'pricing.title': 'Binah-Σ Pricing',
+        'results.title': 'Analysis Results',
+        'loading.text': '⚡ Binah-Σ analyzing decision...',
+        'button.analyze': 'Run Binah-Σ Analysis'
+      },
+      es: {
+        'nav.back': '← Volver al Inicio',
+        'header.version': 'v2.0 - Motor de Decisiones Empresarial',
+        'header.subtitle': 'Infraestructura Cognitiva para Evaluación Estructurada de Decisiones',
+        'tabs.examples': 'Ejemplos Precargados',
+        'tabs.custom': 'Análisis Personalizado',
+        'tabs.pricing': 'Precios',
+        'examples.title': 'Haz Clic en un Ejemplo para Analizar',
+        'pricing.title': 'Precios de Binah-Σ',
+        'results.title': 'Resultados del Análisis',
+        'loading.text': '⚡ Binah-Σ analizando decisión...',
+        'button.analyze': 'Ejecutar Análisis Binah-Σ'
+      }
+    };
+
+    let currentLang = localStorage.getItem('binahLang') || 'en';
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem('binahLang', lang);
+      document.documentElement.lang = lang;
+      document.getElementById('currentLang').textContent = lang.toUpperCase();
+
+      // Update all elements with data-i18n attribute
+      document.querySelectorAll('[data-i18n]').forEach(element => {
+        const key = element.getAttribute('data-i18n');
+        if (translations[lang][key]) {
+          element.innerHTML = translations[lang][key];
+        }
+      });
+    }
+
+    // Language toggle button
+    document.getElementById('langToggle').addEventListener('click', () => {
+      const newLang = currentLang === 'en' ? 'es' : 'en';
+      setLanguage(newLang);
+    });
+
+    // Initialize language on page load
+    setLanguage(currentLang);
   </script>
 </body>
 </html>

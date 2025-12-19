@@ -34,9 +34,9 @@ class TierLimits:
     """Usage limits per tier"""
     LIMITS = {
         Tier.DEMO: {
-            "requests_per_month": 10,
-            "requests_per_day": 5,
-            "requests_per_minute": 2
+            "requests_per_month": 3,
+            "requests_per_day": 3,
+            "requests_per_minute": 1
         },
         Tier.STARTUP: {
             "requests_per_month": 100,
