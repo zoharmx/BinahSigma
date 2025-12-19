@@ -8,7 +8,7 @@ Supports:
 """
 
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional
 from fastapi import Security, HTTPException, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
@@ -77,8 +77,8 @@ def create_api_key(customer_id: str, tier: str = Tier.STARTUP, email: str = None
         "sub": customer_id,
         "tier": tier,
         "email": email,
-        "iat": datetime.now(datetime.UTC),
-        "exp": datetime.now(datetime.UTC) + timedelta(days=ACCESS_TOKEN_EXPIRE_DAYS)
+        "iat": datetime.now(timezone.utc),
+        "exp": datetime.now(timezone.utc) + timedelta(days=ACCESS_TOKEN_EXPIRE_DAYS)
     }
     return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
 
@@ -132,7 +132,7 @@ class APIKeyAuth:
 
         # Check expiration (already done in decode_api_key, but double-check)
         exp = payload.get("exp")
-        if exp and datetime.fromtimestamp(exp, tz=datetime.UTC) < datetime.now(datetime.UTC):
+        if exp and datetime.fromtimestamp(exp, tz=timezone.utc) < datetime.now(timezone.utc):
             raise HTTPException(status_code=401, detail="API key expired")
 
         return payload

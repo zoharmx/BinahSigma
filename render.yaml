@@ -3,8 +3,8 @@ services:
     name: binah-sigma-api
     env: python
     region: oregon
-    buildCommand: pip install --upgrade pip && pip install --upgrade --force-reinstall google-generativeai && pip install --upgrade -r backend/requirements.txt
-    startCommand: cd backend && uvicorn main_v2:app --host 0.0.0.0 --port $PORT --workers 2
+    buildCommand: cd backend && pip install --upgrade pip && pip install -r requirements.txt
+    startCommand: cd backend && uvicorn main_v2:app --host 0.0.0.0 --port $PORT --workers 1 --timeout-keep-alive 30
     healthCheckPath: /health
     envVars:
       - key: ENVIRONMENT
