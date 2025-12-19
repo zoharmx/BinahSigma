@@ -45,6 +45,31 @@
     header {
       text-align: center;
       margin-bottom: 40px;
+      position: relative;
+    }
+
+    .back-button {
+      position: absolute;
+      top: 0;
+      left: 0;
+      padding: 10px 20px;
+      background: transparent;
+      border: 1px solid var(--primary, #00ff88);
+      color: var(--primary, #00ff88);
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Courier New', monospace;
+    }
+
+    .back-button:hover {
+      background: var(--primary, #00ff88);
+      color: #0a0a0a;
+      transform: translateX(-3px);
     }
 
     .logo-header {
@@ -360,6 +385,17 @@
         font-size: 0.9rem;
       }
 
+      .back-button {
+        position: relative;
+        width: 100%;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+
+      header {
+        margin-bottom: 30px;
+      }
+
       h1 {
         font-size: 1.5rem;
       }
@@ -456,6 +492,9 @@
 <body>
   <div class="container">
     <header>
+      <a href="index.html" class="back-button" aria-label="Back to homepage">
+        ← Back to Home
+      </a>
       <div class="logo-header">
         <img src="LOGO.png" alt="Binah-Σ Logo">
         <h1>Binah-Σ</h1>
@@ -464,14 +503,14 @@
       <p class="subtitle">Cognitive Infrastructure for Structured Decision Evaluation</p>
     </header>
 
-    <div class="tabs">
+    <div class="tabs" role="tablist" aria-label="Analysis modes">
       <div class="tab active" data-tab="examples">Pre-loaded Examples</div>
       <div class="tab" data-tab="custom">Custom Analysis</div>
       <div class="tab" data-tab="pricing">Pricing</div>
     </div>
 
     <!-- Examples Tab -->
-    <div class="tab-content active" id="examples-tab">
+    <div class="tab-content active" id="examples-tab" role="tabpanel" aria-labelledby="examples-tab">
       <h2 class="section-title">Click an Example to Analyze</h2>
       <div class="examples-grid">
         <div class="example-card" data-example="twitter">
@@ -507,7 +546,7 @@
     </div>
 
     <!-- Custom Analysis Tab -->
-    <div class="tab-content" id="custom-tab">
+    <div class="tab-content" id="custom-tab" role="tabpanel" aria-labelledby="custom-tab">
       <div class="api-key-section">
         <label for="apiKey">API Key (Optional for Demo)</label>
         <input type="password" id="apiKey" placeholder="Leave blank to use demo endpoint (v1)" />
@@ -565,11 +604,11 @@
         <div class="hint">Expected timeframe for impact assessment</div>
       </div>
 
-      <button onclick="runAnalysis()" id="submitBtn">Run Binah-Σ Analysis</button>
+      <button onclick="runAnalysis()" id="submitBtn" aria-label="Run decision analysis">Run Binah-Σ Analysis</button>
     </div>
 
     <!-- Pricing Tab -->
-    <div class="tab-content" id="pricing-tab">
+    <div class="tab-content" id="pricing-tab" role="tabpanel" aria-labelledby="pricing-tab">
       <h2 class="section-title">Binah-Σ Pricing</h2>
       <div class="examples-grid">
         <div class="metric-card">
@@ -620,7 +659,7 @@
     </div>
 
     <!-- Results Section -->
-    <div id="outputSection" style="display: none;">
+    <div id="outputSection" style="display: none;" role="region" aria-label="Analysis results">
       <h2 class="section-title">Analysis Results</h2>
 
       <div id="metrics" class="metrics-grid"></div>
@@ -638,11 +677,11 @@
       <pre id="output"></pre>
     </div>
 
-    <div id="loading" class="loading" style="display: none;">
+    <div id="loading" class="loading" style="display: none;" role="status" aria-live="polite">
       ⚡ Binah-Σ analyzing decision...
     </div>
 
-    <div id="error" class="error" style="display: none;"></div>
+    <div id="error" class="error" style="display: none;" role="alert" aria-live="assertive"></div>
   </div>
 
   <script>
@@ -702,10 +741,16 @@
     // Tab switching
     document.querySelectorAll('.tab').forEach(tab => {
       tab.addEventListener('click', () => {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        // Update all tabs
+        document.querySelectorAll('.tab').forEach(t => {
+          t.classList.remove('active');
+          t.setAttribute('aria-selected', 'false');
+        });
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
 
+        // Activate clicked tab
         tab.classList.add('active');
+        tab.setAttribute('aria-selected', 'true');
         document.getElementById(tab.dataset.tab + '-tab').classList.add('active');
       });
     });
