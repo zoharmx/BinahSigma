@@ -1001,12 +1001,37 @@
 
     /* Responsive Design */
     @media (max-width: 768px) {
+      nav {
+        padding: 15px 3%;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .logo {
+        font-size: 1.3rem;
+      }
+
+      .logo img {
+        height: 30px;
+      }
+
       .nav-links {
+        display: none;
+      }
+
+      .lang-toggle {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+        order: 3;
+      }
+
+      .cta-nav {
         display: none;
       }
 
       .mobile-menu-btn {
         display: block;
+        order: 4;
       }
 
       .hero h1 {
@@ -1061,11 +1086,35 @@
 
     @media (max-width: 480px) {
       nav {
-        padding: 15px 5%;
+        padding: 12px 3%;
       }
 
       .logo {
-        font-size: 1.4rem;
+        font-size: 1.2rem;
+        flex: 1;
+      }
+
+      .logo img {
+        height: 25px;
+      }
+
+      .lang-toggle {
+        padding: 5px 10px;
+        font-size: 0.8rem;
+        gap: 4px;
+      }
+
+      .lang-icon {
+        font-size: 1rem;
+      }
+
+      .mobile-menu-btn {
+        font-size: 1.3rem;
+        padding: 5px 10px;
+      }
+
+      .hero {
+        padding: 80px 5% 40px;
       }
 
       .hero h1 {
@@ -1415,7 +1464,7 @@
 
       <div class="pricing-card fade-in">
         <div class="tier-name">Startup</div>
-        <div class="tier-price">$799</div>
+        <div class="tier-price">$299</div>
         <div class="tier-period">per month</div>
         <ul class="tier-features">
           <li>100 requests/month</li>
@@ -1429,7 +1478,7 @@
 
       <div class="pricing-card featured fade-in">
         <div class="tier-name">Professional</div>
-        <div class="tier-price">$4,999</div>
+        <div class="tier-price">$999</div>
         <div class="tier-period">per month</div>
         <ul class="tier-features">
           <li>1,000 requests/month</li>
@@ -1693,12 +1742,12 @@
       // Assumptions:
       // - Bad decisions cost 5% of revenue on average
       // - Binah-Σ reduces bad decisions by 80%
-      // - Annual cost is Professional tier $4,999/mo = $59,988/year
+      // - Annual cost is Professional tier $999/mo = $11,988/year
       const costPerBadDecision = revenue * 0.05;
       const badDecisionsPerYear = decisions * (failureRate / 100);
       const totalLoss = badDecisionsPerYear * costPerBadDecision;
       const avoidedLoss = totalLoss * 0.8; // 80% reduction
-      const implementationCost = 59988; // Professional tier annual
+      const implementationCost = 11988; // Professional tier annual
       const netSavings = avoidedLoss - implementationCost;
       const roiMultiple = netSavings / implementationCost;
       const timeSaved = decisions * 20; // 20 hours per decision
@@ -1733,18 +1782,87 @@
     // ========================================
     const translations = {
       en: {
+        // Navigation
         'nav.features': 'Features',
         'nav.about': 'About',
         'nav.pricing': 'Pricing',
         'nav.contact': 'Contact',
         'nav.launch': 'Launch App →',
+
+        // Hero
         'hero.title': 'Decision Intelligence<br>for the AI Era',
         'hero.subtitle': 'Enterprise Cognitive Infrastructure',
         'hero.description': 'Transform complex decisions into auditable insights with transparent scoring, ethical safeguards, and multi-provider LLM support. Built for startups to Fortune 500.',
         'hero.tryDemo': 'Try Demo →',
         'hero.apiDocs': 'API Docs',
+
+        // Interactive Demo
+        'demo.title': 'Experience Binah-Σ',
+        'demo.subtitle': 'Try our interactive demo and calculate your ROI',
+        'demo.interactiveTitle': 'Interactive Decision Demo',
+        'demo.interactiveDesc': 'Select a real-world scenario to see how Binah-Σ analyzes complex decisions:',
+        'demo.scenario1': '🏢 Workforce Reduction',
+        'demo.scenario1Desc': 'Should we lay off 30% of staff to cut costs?',
+        'demo.scenario2': '💼 Acquisition Decision',
+        'demo.scenario2Desc': 'Should we acquire a competitor for $500M?',
+        'demo.scenario3': '🔄 Product Pivot',
+        'demo.scenario3Desc': 'Should we pivot from B2B to B2C model?',
+        'demo.indexScore': 'Binah-Σ Index Score',
+        'demo.roiTitle': 'ROI Calculator',
+        'demo.roiDesc': 'Calculate how much Binah-Σ can save your organization:',
+        'demo.annualRevenue': 'Annual Revenue (USD)',
+        'demo.majorDecisions': 'Major Decisions per Year',
+        'demo.failureRate': 'Estimated Bad Decision Rate (%)',
+        'demo.estimatedSavings': 'Estimated Annual Savings',
+        'demo.roi': 'ROI',
+        'demo.avoidedLosses': 'Avoided Losses',
+        'demo.implementationCost': 'Implementation Cost',
+        'demo.timeSaved': 'Time Saved',
+        'demo.decisionsImproved': 'Decisions Improved',
+
+        // Features
+        'features.title': 'Enterprise-Grade Features',
+        'features.subtitle': 'Built for scale. Designed for transparency. Optimized for trust.',
+        'features.llm.title': 'Multi-Provider LLM',
+        'features.llm.desc': 'Seamless integration with Mistral AI, Google Gemini, and DeepSeek. Automatic failover ensures 99.9% uptime. Choose the right model for each decision.',
+        'features.scoring.title': 'Transparent Scoring',
+        'features.scoring.desc': 'Deterministic index calculation separate from LLM. Industry-specific weights (healthcare prioritizes ethics 40%). Fully auditable scoring breakdown.',
+        'features.veto.title': 'Ethical Veto System',
+        'features.veto.desc': 'Critical risk decisions capped at 0.40 index. High risk capped at 0.60. Prevents AI from endorsing dangerous decisions, no matter how "feasible."',
+        'features.quality.title': 'Quality Validation',
+        'features.quality.desc': 'Rejects generic responses like "it depends" or "consider all options." Enforces minimum content requirements. No vague AI outputs.',
+        'features.auth.title': 'JWT Authentication',
+        'features.auth.desc': 'Secure API keys with 365-day expiration. Tier-based access control. Usage tracking per customer. Enterprise SSO available.',
+        'features.rate.title': 'Rate Limiting',
+        'features.rate.desc': 'Per-minute, per-day, and per-month limits by tier. Prevents abuse while ensuring fair access. Scales from 10 to unlimited requests.',
+
+        // About
+        'about.title': 'The Dashboard for the Boardroom',
+        'about.subtitle': 'Transforming blind decision-making into measurable, auditable corporate intelligence',
+
+        // Pricing
         'pricing.title': 'Simple, Transparent Pricing',
         'pricing.subtitle': 'From startups to enterprises. No hidden fees. Cancel anytime.',
+        'pricing.demo': 'Demo',
+        'pricing.startup': 'Startup',
+        'pricing.professional': 'Professional',
+        'pricing.enterprise': 'Enterprise',
+        'pricing.free': 'Forever free',
+        'pricing.perMonth': 'per month',
+        'pricing.volumePricing': 'volume pricing',
+        'pricing.custom': 'Custom',
+        'pricing.startFree': 'Start Free',
+        'pricing.getStarted': 'Get Started',
+        'pricing.contactSales': 'Contact Sales',
+        'pricing.talkToUs': 'Talk to Us',
+
+        // CTA
+        'cta.title': 'Ready to Transform Your Decision-Making?',
+        'cta.subtitle': 'Join forward-thinking companies using Binah-Σ for critical decisions.',
+        'cta.launchDemo': 'Launch Demo →',
+        'cta.readDocs': 'Read Documentation',
+
+        // Contact
         'contact.title': 'Get in Touch',
         'contact.subtitle': "Interested in Binah-Σ for your organization? Let's talk about how we can help transform your decision-making process.",
         'contact.name': 'Full Name *',
@@ -1755,21 +1873,98 @@
         'contact.message': 'Message *',
         'contact.submit': 'Send Message',
         'contact.success': "✓ Message sent successfully! We'll get back to you within 24 hours.",
-        'contact.error': '✗ Failed to send message. Please try again or email us directly at contact@binahsigma.com'
+        'contact.error': '✗ Failed to send message. Please try again or email us directly at contact@binahsigma.com',
+
+        // Footer
+        'footer.product': 'Product',
+        'footer.company': 'Company',
+        'footer.resources': 'Resources',
+        'footer.legal': 'Legal',
+        'footer.copyright': '© 2025 Binah-Σ. Enterprise Cognitive Infrastructure. All rights reserved.',
+        'footer.tagline': 'Built with transparency. Powered by ethical AI.'
       },
       es: {
+        // Navegación
         'nav.features': 'Características',
         'nav.about': 'Acerca de',
         'nav.pricing': 'Precios',
         'nav.contact': 'Contacto',
         'nav.launch': 'Lanzar App →',
+
+        // Hero
         'hero.title': 'Inteligencia de Decisiones<br>para la Era de la IA',
         'hero.subtitle': 'Infraestructura Cognitiva Empresarial',
         'hero.description': 'Transforma decisiones complejas en insights auditables con puntuación transparente, salvaguardas éticas y soporte multi-proveedor LLM. Diseñado desde startups hasta Fortune 500.',
         'hero.tryDemo': 'Probar Demo →',
         'hero.apiDocs': 'Documentación API',
+
+        // Demo Interactivo
+        'demo.title': 'Experimenta Binah-Σ',
+        'demo.subtitle': 'Prueba nuestro demo interactivo y calcula tu ROI',
+        'demo.interactiveTitle': 'Demo de Decisión Interactivo',
+        'demo.interactiveDesc': 'Selecciona un escenario real para ver cómo Binah-Σ analiza decisiones complejas:',
+        'demo.scenario1': '🏢 Reducción de Personal',
+        'demo.scenario1Desc': '¿Deberíamos despedir al 30% del personal para reducir costos?',
+        'demo.scenario2': '💼 Decisión de Adquisición',
+        'demo.scenario2Desc': '¿Deberíamos adquirir un competidor por $500M?',
+        'demo.scenario3': '🔄 Cambio de Producto',
+        'demo.scenario3Desc': '¿Deberíamos pivotar de modelo B2B a B2C?',
+        'demo.indexScore': 'Puntuación Índice Binah-Σ',
+        'demo.roiTitle': 'Calculadora de ROI',
+        'demo.roiDesc': 'Calcula cuánto puede ahorrar Binah-Σ a tu organización:',
+        'demo.annualRevenue': 'Ingresos Anuales (USD)',
+        'demo.majorDecisions': 'Decisiones Importantes por Año',
+        'demo.failureRate': 'Tasa Estimada de Malas Decisiones (%)',
+        'demo.estimatedSavings': 'Ahorro Anual Estimado',
+        'demo.roi': 'ROI',
+        'demo.avoidedLosses': 'Pérdidas Evitadas',
+        'demo.implementationCost': 'Costo de Implementación',
+        'demo.timeSaved': 'Tiempo Ahorrado',
+        'demo.decisionsImproved': 'Decisiones Mejoradas',
+
+        // Características
+        'features.title': 'Características de Nivel Empresarial',
+        'features.subtitle': 'Construido para escalar. Diseñado para transparencia. Optimizado para confianza.',
+        'features.llm.title': 'LLM Multi-Proveedor',
+        'features.llm.desc': 'Integración perfecta con Mistral AI, Google Gemini y DeepSeek. Failover automático garantiza 99.9% de uptime. Elige el modelo adecuado para cada decisión.',
+        'features.scoring.title': 'Puntuación Transparente',
+        'features.scoring.desc': 'Cálculo de índice determinístico separado del LLM. Pesos específicos por industria (salud prioriza ética 40%). Desglose de puntuación completamente auditable.',
+        'features.veto.title': 'Sistema de Veto Ético',
+        'features.veto.desc': 'Decisiones de riesgo crítico limitadas a índice 0.40. Alto riesgo limitado a 0.60. Previene que la IA respalde decisiones peligrosas, sin importar qué tan "factibles" sean.',
+        'features.quality.title': 'Validación de Calidad',
+        'features.quality.desc': 'Rechaza respuestas genéricas como "depende" o "considera todas las opciones". Aplica requisitos mínimos de contenido. Sin salidas vagas de IA.',
+        'features.auth.title': 'Autenticación JWT',
+        'features.auth.desc': 'Claves API seguras con expiración de 365 días. Control de acceso basado en tier. Seguimiento de uso por cliente. SSO empresarial disponible.',
+        'features.rate.title': 'Límite de Tasa',
+        'features.rate.desc': 'Límites por minuto, día y mes según tier. Previene abuso mientras asegura acceso justo. Escala de 10 a solicitudes ilimitadas.',
+
+        // Acerca de
+        'about.title': 'El Dashboard para la Sala de Juntas',
+        'about.subtitle': 'Transformando la toma de decisiones ciega en inteligencia corporativa medible y auditable',
+
+        // Precios
         'pricing.title': 'Precios Simples y Transparentes',
         'pricing.subtitle': 'Desde startups hasta empresas. Sin costos ocultos. Cancela en cualquier momento.',
+        'pricing.demo': 'Demo',
+        'pricing.startup': 'Startup',
+        'pricing.professional': 'Profesional',
+        'pricing.enterprise': 'Empresarial',
+        'pricing.free': 'Gratis para siempre',
+        'pricing.perMonth': 'por mes',
+        'pricing.volumePricing': 'precios por volumen',
+        'pricing.custom': 'Personalizado',
+        'pricing.startFree': 'Empezar Gratis',
+        'pricing.getStarted': 'Comenzar',
+        'pricing.contactSales': 'Contactar Ventas',
+        'pricing.talkToUs': 'Háblanos',
+
+        // CTA
+        'cta.title': '¿Listo para Transformar tu Toma de Decisiones?',
+        'cta.subtitle': 'Únete a empresas visionarias que usan Binah-Σ para decisiones críticas.',
+        'cta.launchDemo': 'Lanzar Demo →',
+        'cta.readDocs': 'Leer Documentación',
+
+        // Contacto
         'contact.title': 'Contáctanos',
         'contact.subtitle': '¿Interesado en Binah-Σ para tu organización? Hablemos sobre cómo podemos ayudar a transformar tu proceso de toma de decisiones.',
         'contact.name': 'Nombre Completo *',
@@ -1780,7 +1975,15 @@
         'contact.message': 'Mensaje *',
         'contact.submit': 'Enviar Mensaje',
         'contact.success': '✓ ¡Mensaje enviado exitosamente! Te responderemos en 24 horas.',
-        'contact.error': '✗ Error al enviar mensaje. Por favor intenta de nuevo o escríbenos a contact@binahsigma.com'
+        'contact.error': '✗ Error al enviar mensaje. Por favor intenta de nuevo o escríbenos a contact@binahsigma.com',
+
+        // Footer
+        'footer.product': 'Producto',
+        'footer.company': 'Empresa',
+        'footer.resources': 'Recursos',
+        'footer.legal': 'Legal',
+        'footer.copyright': '© 2025 Binah-Σ. Infraestructura Cognitiva Empresarial. Todos los derechos reservados.',
+        'footer.tagline': 'Construido con transparencia. Impulsado por IA ética.'
       }
     };
 
